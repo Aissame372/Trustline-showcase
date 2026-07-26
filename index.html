@@ -64,6 +64,10 @@
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
 
+  /* -------- barre de progression de lecture -------- */
+  .progression { position: fixed; top: 0; left: 0; height: 2px; width: 100%; z-index: 50; background: transparent; }
+  .progression__trait { height: 100%; width: 100%; background: var(--laiton-clair); transform: scaleX(0); transform-origin: left; will-change: transform; }
+
   body {
     margin: 0;
     background: var(--bg);
@@ -140,7 +144,18 @@
     color: var(--ivoire);
     color-scheme: dark;
   }
-  .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.5; }
+  .hero canvas { position: absolute; inset: -10% -5%; width: 110%; height: 120%; opacity: 0.55; will-change: transform; }
+  /* grain filmique : texture discrete par-dessus le canvas, coherente dans les deux themes */
+  .hero::before {
+    content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    opacity: 0.05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* vignette : concentre le regard sur le texte, accentue la profondeur */
+  .hero::after {
+    content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 32% 40%, transparent 0%, transparent 35%, rgba(27,36,48,0.55) 100%);
+  }
   .hero__contenu { position: relative; z-index: 1; }
   .hero__marque { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 3rem; }
   .hero__marque .glyphe--hero { width: 5.5rem; height: 2.75rem; }
@@ -177,6 +192,11 @@
   @media (prefers-reduced-motion: no-preference) {
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
     .reveal.visible { opacity: 1; transform: none; }
+
+    /* enfants a cascade (etapes du pipeline, chips de gravite...) : chaque
+       element porte son propre delai via --d, defini en ligne */
+    .reveal-item { opacity: 0; transform: translateY(16px) scale(0.98); filter: blur(3px); transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease; transition-delay: var(--d, 0s); }
+    .reveal-item.visible { opacity: 1; transform: none; filter: blur(0); }
   }
 
   section { padding: 5.5rem 0; }
@@ -248,6 +268,7 @@
   .carte-rapport__vignette::before { content: ""; position: absolute; top: 14px; left: 10px; right: 10px; height: 3px; background: var(--accent); }
   .carte-rapport__texte { flex: 1; }
   .carte-rapport__texte p { margin: 0.4rem 0 1.2rem; color: var(--muted); font-size: 0.92rem; }
+  .carte-rapport__actions { display: flex; gap: 0.9rem; flex-wrap: wrap; }
 
   /* -------- a propos -------- */
   .bio { display: flex; gap: 2.5rem; align-items: flex-start; }
@@ -255,20 +276,25 @@
   .bio__glyphe { flex: none; width: 4.5rem; height: 4.5rem; border-radius: 50%; border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; }
   .bio__glyphe .glyphe { width: 2.2rem; height: 1.1rem; }
 
-  /* -------- formulaire de contact -------- */
-  form.contact {
-    display: grid; gap: 1.1rem; max-width: 32rem; margin-top: 2.2rem;
+  /* -------- contact : carte email, pas de formulaire -------- */
+  .carte-contact {
+    display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+    padding: 2.2rem 2.4rem; margin-top: 2.2rem; position: relative; overflow: hidden;
   }
-  form.contact label { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; display: block; }
-  form.contact input, form.contact textarea {
-    width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 2px;
-    padding: 0.8rem 0.9rem; font-family: var(--font-sans); font-size: 0.95rem; color: var(--ink);
+  .carte-contact::before {
+    content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--accent);
   }
-  form.contact textarea { min-height: 8rem; resize: vertical; }
-  form.contact .honeypot { position: absolute; left: -9999px; }
-  .contact__statut { font-size: 0.85rem; margin-top: 0.4rem; }
-  .contact__statut[data-etat="ok"] { color: var(--good); }
-  .contact__statut[data-etat="erreur"] { color: var(--critical); }
+  .carte-contact__adresse { font-family: var(--font-display); font-size: clamp(1.3rem, 3vw, 1.7rem); text-decoration: none; color: var(--ink); border-bottom: 1px solid transparent; transition: border-color 0.2s ease; }
+  .carte-contact__adresse:hover { border-color: var(--accent); }
+  .carte-contact__actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .bouton-copier {
+    display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 1px solid var(--border);
+    border-radius: 2px; padding: 0.65rem 1.1rem; font-family: var(--font-sans); font-size: 0.78rem;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .bouton-copier:hover { border-color: var(--accent); color: var(--accent); }
+  .contact__statut { font-size: 0.8rem; margin: 0.9rem 0 0; color: var(--good); min-height: 1.2em; }
 
   footer { padding: 3rem 0 4rem; border-top: 1px solid var(--border); }
   footer p { font-size: 0.8rem; color: var(--muted); margin: 0.4rem 0; }
@@ -277,6 +303,8 @@
 </style>
 </head>
 <body>
+
+<div class="progression" aria-hidden="true"><div class="progression__trait" id="fil-lecture"></div></div>
 
 <nav class="barre">
   <a class="marque marque--nav" href="#haut">
@@ -327,11 +355,12 @@
       <div class="terminal__barre"><span class="terminal__point"></span><span class="terminal__point"></span><span class="terminal__point"></span></div>
       <div class="terminal__corps">$ trustline analyze cabinet-exemple.fr
 
-score de maturité clm : 15/100 — <span class="crit">maturité faible</span>
+score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
 
 <span class="crit">[critique]</span>  extranet.cabinet-exemple.fr — certificat auto-signé, absent de l'historique CT
 <span class="crit">[critique]</span>  www.cabinet-exemple.fr — expire dans 17 jour(s)
 <span class="moy">[moyen]</span>     cabinet-exemple.fr — aucun enregistrement CAA
+<span class="info">[info]</span>     cabinet-exemple.fr — DNSSEC non actif
 <span class="info">[info]</span>     *.cabinet-exemple.fr — certificat wildcard détecté
 <span class="att">[ok]</span>       www.cabinet-exemple.fr — chaîne complète, validation stricte OK</div>
     </div>
@@ -357,10 +386,10 @@ score de maturité clm : 15/100 — <span class="crit">maturité faible</span>
     <p class="eyebrow">Comment ça marche</p>
     <h2>quatre étapes, une seule source de vérité</h2>
     <div class="pipeline">
-      <div class="etape"><div class="etape__num">01</div><h3>Passif</h3><p>Journaux Certificate Transparency et DNS public. Aucune connexion vers la cible.</p></div>
-      <div class="etape"><div class="etape__num">02</div><h3>Actif</h3><p>Handshake TLS réel, à débit plafonné, sur les seuls ports de services chiffrés.</p></div>
-      <div class="etape"><div class="etape__num">03</div><h3>Analyse</h3><p>Fusion des deux sources, détection des écarts, calcul du score de maturité.</p></div>
-      <div class="etape"><div class="etape__num">04</div><h3>Rapport</h3><p>Un document unique, lisible par un board comme par une équipe technique.</p></div>
+      <div class="etape reveal-item" style="--d:0s"><div class="etape__num">01</div><h3>Passif</h3><p>Journaux Certificate Transparency et DNS public. Aucune connexion vers la cible.</p></div>
+      <div class="etape reveal-item" style="--d:0.1s"><div class="etape__num">02</div><h3>Actif</h3><p>Handshake TLS réel, à débit plafonné, sur les seuls ports de services chiffrés.</p></div>
+      <div class="etape reveal-item" style="--d:0.2s"><div class="etape__num">03</div><h3>Analyse</h3><p>Fusion des deux sources, détection des écarts, calcul du score de maturité.</p></div>
+      <div class="etape reveal-item" style="--d:0.3s"><div class="etape__num">04</div><h3>Rapport</h3><p>Un document unique, lisible par un board comme par une équipe technique.</p></div>
     </div>
   </div>
 </section>
@@ -379,9 +408,9 @@ score de maturité clm : 15/100 — <span class="crit">maturité faible</span>
     </div>
 
     <div class="grille-gravite">
-      <div class="chip chip--critique"><span class="chip__etiquette">Critique</span><p>Certificat expiré, auto-signé, ou absent de l'historique CT connu.</p></div>
-      <div class="chip chip--moyen"><span class="chip__etiquette">Moyen</span><p>Expiration proche, absence de CAA, chaîne incomplète.</p></div>
-      <div class="chip chip--info"><span class="chip__etiquette">Info</span><p>Certificat wildcard détecté — à surveiller, pas nécessairement à corriger.</p></div>
+      <div class="chip chip--critique reveal-item" style="--d:0s"><span class="chip__etiquette">Critique</span><p>Certificat expiré, auto-signé, ou absent de l'historique CT connu.</p></div>
+      <div class="chip chip--moyen reveal-item" style="--d:0.1s"><span class="chip__etiquette">Moyen</span><p>Expiration proche, absence de CAA, chaîne incomplète.</p></div>
+      <div class="chip chip--info reveal-item" style="--d:0.2s"><span class="chip__etiquette">Info</span><p>Certificat wildcard détecté — à surveiller, pas nécessairement à corriger.</p></div>
     </div>
   </div>
 </section>
@@ -394,8 +423,11 @@ score de maturité clm : 15/100 — <span class="crit">maturité faible</span>
       <div class="carte-rapport__vignette" aria-hidden="true"></div>
       <div class="carte-rapport__texte">
         <h3 style="font-family:var(--font-sans); font-size:0.95rem; letter-spacing:0.04em; text-transform:uppercase; margin:0;">cabinet-exemple.fr — domaine entièrement fictif</h3>
-        <p>Couverture avec résumé exécutif en langage clair, indicateurs clés, jauge de score, constats détaillés avec conseils, et annexes techniques. Aucune donnée réelle n'y figure : ce rapport illustre la structure, pas un audit réel.</p>
-        <a class="bouton bouton--plein" href="demo/rapport-demo-cabinet-exemple.pdf">Télécharger l'exemple (PDF)</a>
+        <p>Résumé exécutif en langage clair, indicateurs clés, jauge de score, constats détaillés avec conseils, annexes techniques. Deux formats identiques dans le contenu, le PDF pour l'archivage et le comité, le HTML pour une lecture interactive. Aucune donnée réelle n'y figure : ce rapport illustre la structure, pas un audit réel.</p>
+        <div class="carte-rapport__actions">
+          <a class="bouton bouton--plein" href="demo/rapport-demo-cabinet-exemple.html">Voir le rapport (HTML)</a>
+          <a class="bouton bouton--vide" href="demo/rapport-demo-cabinet-exemple.pdf">Télécharger (PDF)</a>
+        </div>
       </div>
     </div>
   </div>
@@ -429,29 +461,16 @@ score de maturité clm : 15/100 — <span class="crit">maturité faible</span>
   <div class="conteneur">
     <p class="eyebrow">Contact</p>
     <h2>une mission, un poste, une question technique</h2>
-    <p class="mute">Utilisez le formulaire ci-dessous, ou écrivez directement.</p>
+    <p class="mute">Pas de formulaire ni d'intermédiaire — un email suffit.</p>
 
-    <form class="contact" id="formulaire-contact" action="https://api.web3forms.com/submit" method="POST">
-      <input type="hidden" name="access_key" value="COLLE_TA_CLE_WEB3FORMS_ICI" />
-      <input type="hidden" name="subject" value="Nouveau message depuis trustline.identity-ops.com" />
-      <input type="checkbox" name="botcheck" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
-
-      <div>
-        <label for="nom">Nom</label>
-        <input type="text" id="nom" name="name" required />
+    <div class="carte-contact">
+      <a class="carte-contact__adresse" href="mailto:contact@identity-ops.com">contact@identity-ops.com</a>
+      <div class="carte-contact__actions">
+        <button type="button" class="bouton-copier" id="bouton-copier" data-adresse="contact@identity-ops.com">Copier l'adresse</button>
+        <a class="bouton bouton--plein" href="mailto:contact@identity-ops.com">Écrire un email</a>
       </div>
-      <div>
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required />
-      </div>
-      <div>
-        <label for="message">Message</label>
-        <textarea id="message" name="message" required></textarea>
-      </div>
-      <button type="submit" class="bouton bouton--plein" style="justify-self:start;">Envoyer</button>
-      <p class="contact__statut" id="contact-statut" role="status"></p>
-    </form>
-    <p class="mute" style="font-size:0.8rem; margin-top:1rem;">Ou directement par email : <a href="mailto:contact@identity-ops.com" style="border-bottom:1px solid var(--border);">contact@identity-ops.com</a></p>
+    </div>
+    <p class="contact__statut" id="contact-statut" role="status"></p>
   </div>
 </section>
 
@@ -467,8 +486,8 @@ score de maturité clm : 15/100 — <span class="crit">maturité faible</span>
   "use strict";
   var reduitMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Reveal au scroll
-  var elements = document.querySelectorAll(".reveal");
+  // Reveal au scroll (sections entieres + enfants a cascade via --d)
+  var elements = document.querySelectorAll(".reveal, .reveal-item");
   if (reduitMotion || !("IntersectionObserver" in window)) {
     elements.forEach(function (el) { el.classList.add("visible"); });
   } else {
@@ -481,6 +500,18 @@ score de maturité clm : 15/100 — <span class="crit">maturité faible</span>
       });
     }, { threshold: 0.15 });
     elements.forEach(function (el) { observateur.observe(el); });
+  }
+
+  // Barre de progression de lecture (fil qui se remplit avec le scroll)
+  var filLecture = document.getElementById("fil-lecture");
+  if (filLecture) {
+    var majProgression = function () {
+      var hauteurTotale = document.documentElement.scrollHeight - window.innerHeight;
+      var progres = hauteurTotale > 0 ? Math.min(1, window.scrollY / hauteurTotale) : 0;
+      filLecture.style.transform = "scaleX(" + progres + ")";
+    };
+    document.addEventListener("scroll", function () { requestAnimationFrame(majProgression); }, { passive: true });
+    majProgression();
   }
 
   // Jauge de score : anime au premier passage en vue
@@ -503,20 +534,27 @@ score de maturité clm : 15/100 — <span class="crit">maturité faible</span>
     }
   }
 
-  // Reseau ambiant en fond du hero (canvas, discret, en pause si prefers-reduced-motion)
+  // Reseau ambiant en fond du hero : orbes de profondeur (lents) + reseau de
+  // noeuds (existant) + balayage periodique evoquant une verification de
+  // handshake. En pause complete si prefers-reduced-motion.
   var canvas = document.getElementById("reseau");
   if (canvas && !reduitMotion) {
     var ctx = canvas.getContext("2d");
     var hero = canvas.parentElement;
     var noeuds = [];
+    var orbes = [];
     var NB_NOEUDS = 32;
     var DISTANCE_LIEN = 130;
+    var debut = performance.now();
+    var supporteFiltre = (function () { try { return "filter" in ctx; } catch (e) { return false; } })();
 
     function dimensionner() {
-      canvas.width = hero.offsetWidth;
-      canvas.height = hero.offsetHeight;
+      // Le canvas deborde volontairement du hero (voir CSS, inset negatif) :
+      // la marge absorbe le decalage de la parallaxe sans jamais montrer de bord.
+      canvas.width = hero.offsetWidth * 1.10;
+      canvas.height = hero.offsetHeight * 1.20;
     }
-    function initNoeuds() {
+    function initCouches() {
       noeuds = [];
       for (var i = 0; i < NB_NOEUDS; i++) {
         noeuds.push({
@@ -526,9 +564,50 @@ score de maturité clm : 15/100 — <span class="crit">maturité faible</span>
           vy: (Math.random() - 0.5) * 0.15
         });
       }
+      orbes = [];
+      for (var j = 0; j < 3; j++) {
+        orbes.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          rayon: 140 + Math.random() * 90,
+          vx: (Math.random() - 0.5) * 0.05,
+          vy: (Math.random() - 0.5) * 0.05
+        });
+      }
     }
-    function dessiner() {
+    function dessinerOrbes() {
+      for (var o = 0; o < orbes.length; o++) {
+        var orbe = orbes[o];
+        orbe.x += orbe.vx; orbe.y += orbe.vy;
+        if (orbe.x < -orbe.rayon || orbe.x > canvas.width + orbe.rayon) orbe.vx *= -1;
+        if (orbe.y < -orbe.rayon || orbe.y > canvas.height + orbe.rayon) orbe.vy *= -1;
+        var degrade = ctx.createRadialGradient(orbe.x, orbe.y, 0, orbe.x, orbe.y, orbe.rayon);
+        degrade.addColorStop(0, "rgba(176,141,87,0.10)");
+        degrade.addColorStop(1, "rgba(176,141,87,0)");
+        ctx.fillStyle = degrade;
+        ctx.beginPath();
+        ctx.arc(orbe.x, orbe.y, orbe.rayon, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    function dessinerBalayage(t) {
+      var CYCLE = 7000;
+      var phase = (t % CYCLE) / CYCLE;
+      if (phase > 0.4) return; // le balayage n'occupe qu'une portion du cycle
+      var intensite = Math.sin((phase / 0.4) * Math.PI);
+      var x = phase / 0.4 * (canvas.width + 240) - 120;
+      var degrade = ctx.createLinearGradient(x - 60, 0, x + 60, 0);
+      degrade.addColorStop(0, "rgba(201,166,113,0)");
+      degrade.addColorStop(0.5, "rgba(201,166,113," + (0.06 * intensite) + ")");
+      degrade.addColorStop(1, "rgba(201,166,113,0)");
+      ctx.fillStyle = degrade;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    function dessiner(t) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (supporteFiltre) { ctx.filter = "blur(18px)"; dessinerOrbes(); ctx.filter = "none"; }
+      else { dessinerOrbes(); }
+
       for (var i = 0; i < noeuds.length; i++) {
         var n = noeuds[i];
         n.x += n.vx; n.y += n.vy;
@@ -553,44 +632,52 @@ score de maturité clm : 15/100 — <span class="crit">maturité faible</span>
         ctx.arc(noeuds[a].x, noeuds[a].y, 1.4, 0, Math.PI * 2);
         ctx.fill();
       }
+      dessinerBalayage(t - debut);
       requestAnimationFrame(dessiner);
     }
     dimensionner();
-    initNoeuds();
-    dessiner();
-    window.addEventListener("resize", function () { dimensionner(); });
+    initCouches();
+    requestAnimationFrame(dessiner);
+    window.addEventListener("resize", function () { dimensionner(); initCouches(); });
+
+    // Parallaxe : scroll (profondeur) + pointeur (tenue en main, souris uniquement)
+    var decalageScroll = 0, decalagePointeurX = 0, decalagePointeurY = 0;
+    function appliquerTransform() {
+      canvas.style.transform = "translate(" + decalagePointeurX + "px," + (decalageScroll + decalagePointeurY) + "px)";
+    }
+    document.addEventListener("scroll", function () {
+      requestAnimationFrame(function () {
+        decalageScroll = Math.min(60, window.scrollY * 0.12);
+        appliquerTransform();
+      });
+    }, { passive: true });
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      hero.addEventListener("mousemove", function (evenement) {
+        var rect = hero.getBoundingClientRect();
+        decalagePointeurX = ((evenement.clientX - rect.left) / rect.width - 0.5) * 18;
+        decalagePointeurY = ((evenement.clientY - rect.top) / rect.height - 0.5) * 12;
+        appliquerTransform();
+      });
+      hero.addEventListener("mouseleave", function () {
+        decalagePointeurX = 0; decalagePointeurY = 0;
+        appliquerTransform();
+      });
+    }
   }
 
-  // Formulaire de contact (Web3Forms), avec repli mailto si la cle n'est pas configuree
-  var formulaire = document.getElementById("formulaire-contact");
-  var statut = document.getElementById("contact-statut");
-  if (formulaire) {
-    formulaire.addEventListener("submit", function (evenement) {
-      var cle = formulaire.querySelector('[name="access_key"]').value;
-      if (!cle || cle === "COLLE_TA_CLE_WEB3FORMS_ICI") {
-        evenement.preventDefault();
-        statut.dataset.etat = "erreur";
-        statut.textContent = "Formulaire pas encore configuré — écris directement à contact@identity-ops.com.";
-        return;
+  // Contact : copier l'adresse email dans le presse-papiers
+  var boutonCopier = document.getElementById("bouton-copier");
+  var statutContact = document.getElementById("contact-statut");
+  if (boutonCopier) {
+    boutonCopier.addEventListener("click", function () {
+      var adresse = boutonCopier.dataset.adresse;
+      var suite = function () { statutContact.textContent = "Adresse copiée dans le presse-papiers."; };
+      var echec = function () { statutContact.textContent = "Copie indisponible — utilisez le lien mailto ci-contre."; };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(adresse).then(suite).catch(echec);
+      } else {
+        echec();
       }
-      evenement.preventDefault();
-      statut.dataset.etat = "";
-      statut.textContent = "Envoi en cours…";
-      fetch(formulaire.action, { method: "POST", body: new FormData(formulaire), headers: { Accept: "application/json" } })
-        .then(function (reponse) { return reponse.json(); })
-        .then(function (donnees) {
-          if (donnees.success) {
-            statut.dataset.etat = "ok";
-            statut.textContent = "Message envoyé, merci — réponse sous peu.";
-            formulaire.reset();
-          } else {
-            throw new Error("echec");
-          }
-        })
-        .catch(function () {
-          statut.dataset.etat = "erreur";
-          statut.textContent = "Échec de l'envoi — écris directement à contact@identity-ops.com.";
-        });
     });
   }
 })();

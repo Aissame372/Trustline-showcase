@@ -10,30 +10,25 @@ dans un dépôt privé distinct. Ce dépôt-ci est public.
 
 ## Contenu
 
-- `index.html` — le site, autonome (aucune bibliothèque tierce, aucune
-  police/CDN externe). Un seul appel réseau externe : la soumission du
-  formulaire de contact vers `api.web3forms.com` (voir plus bas). Pensé
-  pour un public technique et non technique, avec animations légères
-  (`prefers-reduced-motion` respecté).
-- `demo/rapport-demo-cabinet-exemple.pdf` — un rapport d'exemple généré avec
-  le vrai pipeline Trustline, sur un domaine **entièrement fictif**
-  (`cabinet-exemple.fr`). Aucune donnée réelle n'y figure.
+- `index.html` — le site, entièrement autonome et statique : aucune
+  bibliothèque tierce, aucune police/CDN externe, **aucun appel réseau du
+  tout** (le contact se fait par `mailto:`, pas de formulaire). Pensé pour
+  un public technique et non technique, avec un hero animé (canvas en
+  couches : réseau de noeuds, orbes de profondeur, balayage périodique,
+  parallaxe scroll/pointeur) et des révélations en cascade au scroll
+  (`prefers-reduced-motion` respecté partout).
+- `demo/rapport-demo-cabinet-exemple.pdf` et
+  `demo/rapport-demo-cabinet-exemple.html` — le même rapport d'exemple
+  généré avec le vrai pipeline Trustline (`report.py`), sur un domaine
+  **entièrement fictif** (`cabinet-exemple.fr`). Aucune donnée réelle n'y
+  figure. Les deux fichiers viennent du même rapport d'analyse : ne pas les
+  régénérer séparément si l'un des deux change.
 
-## Formulaire de contact
+## Contact
 
-Le formulaire (section Contact) poste vers
-[Web3Forms](https://web3forms.com) (gratuit). À faire une fois :
-
-1. Aller sur web3forms.com, entrer l'email de destination — une clé
-   d'accès est envoyée immédiatement (aucun compte à créer).
-2. Dans `index.html`, remplacer `COLLE_TA_CLE_WEB3FORMS_ICI` (attribut
-   `value` du champ caché `access_key`) par cette clé.
-3. `git commit` + `git push` — c'est tout, pas de redéploiement manuel si
-   Cloudflare/GitHub Pages est déjà branché sur le dépôt.
-
-Tant que la clé n'est pas renseignée, le formulaire affiche un message
-invitant à écrire directement à `contact@identity-ops.com` au lieu
-d'essayer d'envoyer.
+Volontairement pas de formulaire : un lien `mailto:contact@identity-ops.com`
+(routé via Cloudflare Email Routing) et un bouton "copier l'adresse". Zéro
+dépendance externe, zéro donnée collectée.
 
 ## Deploiement
 
