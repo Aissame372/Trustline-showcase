@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Trustline — certificate intelligence</title>
+<meta name="description" content="Trustline cartographie le cycle de vie des certificats TLS d'un domaine et produit un score de maturité clair, avec des recommandations concrètes." />
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgZmlsbD0ibm9uZSI+CiAgPHBhdGggZD0iTTE4IDI0IEw4OCAyNCIgc3Ryb2tlPSIjMUIyNDMwIiBzdHJva2Utd2lkdGg9IjE0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNNTggMjQgTDU4IDQ0IiBzdHJva2U9IiMxQjI0MzAiIHN0cm9rZS13aWR0aD0iMTQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik01OCA2MCBMNTggODAiIHN0cm9rZT0iIzFCMjQzMCIgc3Ryb2tlLXdpZHRoPSIxNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTMwIDM0IEwzMCA4MCIgc3Ryb2tlPSIjQjA4RDU3IiBzdHJva2Utd2lkdGg9IjE0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNMzAgNTIgTDc0IDUyIiBzdHJva2U9IiNCMDhENTciIHN0cm9rZS13aWR0aD0iMTQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K" />
+<style>
+  :root {
+    --ivoire: #F6F2EA;
+    --charcoal: #1B2430;
+    --laiton: #B08D57;
+    --laiton-clair: #C9A671;
+    --gris: #9A9488;
+    --gris-sombre: #8E9AA8;
+
+    --bg: var(--ivoire);
+    --bg-alt: #EDE7DA;
+    --ink: var(--charcoal);
+    --muted: var(--gris);
+    --accent: var(--laiton);
+    --surface: #FFFFFF;
+    --border: rgba(27, 36, 48, 0.14);
+    --critical: #a8382f;
+    --warning: #b3791e;
+    --good: #2f6f4e;
+
+    --font-display: 'Cormorant', Garamond, 'Apple Garamond', Georgia, serif;
+    --font-sans: 'Jost', Futura, 'Century Gothic', Helvetica, Arial, sans-serif;
+
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      --bg: var(--charcoal);
+      --bg-alt: #222E3D;
+      --ink: var(--ivoire);
+      --muted: var(--gris-sombre);
+      --accent: var(--laiton-clair);
+      --surface: #23303F;
+      --border: rgba(246, 242, 234, 0.16);
+      --critical: #e08277;
+      --warning: #e3ab53;
+      --good: #6fbf94;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: var(--charcoal);
+    --bg-alt: #222E3D;
+    --ink: var(--ivoire);
+    --muted: var(--gris-sombre);
+    --accent: var(--laiton-clair);
+    --surface: #23303F;
+    --border: rgba(246, 242, 234, 0.16);
+    --critical: #e08277;
+    --warning: #e3ab53;
+    --good: #6fbf94;
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --bg: var(--ivoire);
+    --bg-alt: #EDE7DA;
+    --ink: var(--charcoal);
+    --muted: var(--gris);
+    --accent: var(--laiton);
+    --surface: #FFFFFF;
+    --border: rgba(27, 36, 48, 0.14);
+    --critical: #a8382f;
+    --warning: #b3791e;
+    --good: #2f6f4e;
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .conteneur {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 0 1.75rem;
+  }
+  .conteneur--large { max-width: 60rem; }
+
+  /* -------- navigation -------- */
+  nav.barre {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.75rem;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .barre__marque { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+  .barre__marque svg { width: 1.6rem; height: 1.6rem; }
+  .barre__marque span {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    letter-spacing: 0.06em;
+  }
+  .barre__liens { display: flex; gap: 1.6rem; list-style: none; margin: 0; padding: 0; }
+  .barre__liens a {
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .barre__liens a:hover { color: var(--accent); }
+  @media (max-width: 640px) {
+    .barre__liens { display: none; }
+  }
+
+  /* -------- motif du monogramme (reutilise en filigrane) -------- */
+  .mono .trait-t { stroke: var(--ink); }
+  .mono .trait-l { stroke: var(--accent); }
+  .mono path { fill: none; stroke-width: 11; stroke-linecap: round; }
+
+  .filigrane {
+    position: absolute;
+    opacity: 0.05;
+    pointer-events: none;
+  }
+  .filigrane .trait-t, .filigrane .trait-l { stroke: var(--ink); stroke-width: 6; }
+
+  /* -------- hero -------- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 6.5rem 0 5rem;
+    text-align: center;
+  }
+  .hero__oeil {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.4rem;
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(2.1rem, 5.2vw, 3.6rem);
+    line-height: 1.18;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+    margin: 0 0 1.5rem;
+  }
+  .hero__sous {
+    max-width: 38rem;
+    margin: 0 auto 2.6rem;
+    color: var(--muted);
+    font-size: 1.05rem;
+  }
+  .hero__actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  .bouton {
+    display: inline-block;
+    padding: 0.85rem 1.9rem;
+    border-radius: 2px;
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid var(--accent);
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+  .bouton--plein { background: var(--accent); color: var(--charcoal); }
+  .bouton--plein:hover { transform: translateY(-1px); }
+  .bouton--vide { background: transparent; color: var(--ink); }
+  .bouton--vide:hover { background: var(--accent); color: var(--charcoal); }
+
+  /* -------- structure des sections -------- */
+  section { padding: 5rem 0; }
+  section.alt { background: var(--bg-alt); }
+  .eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.8rem;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.7rem, 3.4vw, 2.3rem);
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+    margin: 0 0 1.4rem;
+  }
+  section p { color: var(--ink); }
+  section p.mute { color: var(--muted); }
+
+  .diviseur {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* -------- pipeline (sequence numerotee) -------- */
+  .pipeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.6rem;
+    margin-top: 2.5rem;
+  }
+  @media (max-width: 780px) {
+    .pipeline { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .pipeline { grid-template-columns: 1fr; }
+  }
+  .etape__num {
+    font-family: var(--font-display);
+    font-size: 2.1rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.6rem;
+  }
+  .etape h3 {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0 0 0.5rem;
+  }
+  .etape p { font-size: 0.92rem; color: var(--muted); margin: 0; }
+
+  /* -------- details techniques -------- */
+  details {
+    margin-top: 2rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1.4rem;
+  }
+  summary {
+    cursor: pointer;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "+ "; }
+  details[open] summary::before { content: "– "; }
+  details .contenu-tech { margin-top: 1.2rem; }
+  details .contenu-tech ul { padding-left: 1.1rem; }
+  details .contenu-tech li { margin-bottom: 0.5rem; color: var(--muted); font-size: 0.94rem; }
+  details .contenu-tech li strong { color: var(--ink); }
+
+  /* -------- jauge score -------- */
+  .jauge-demo { max-width: 26rem; margin: 2.5rem auto 0; }
+  .jauge-demo__chiffre {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 0.3rem;
+  }
+  .jauge-demo__niveau {
+    text-align: center;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .jauge-piste {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--border);
+    overflow: hidden;
+  }
+  .jauge-remplie {
+    height: 100%;
+    width: 61%;
+    background: var(--warning);
+    border-radius: 4px;
+  }
+  .jauge-legende {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.6rem;
+  }
+
+  .grille-gravite {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2.2rem;
+  }
+  @media (max-width: 600px) { .grille-gravite { grid-template-columns: 1fr; } }
+  .chip {
+    border-radius: 3px;
+    padding: 1.1rem 1.2rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .chip__etiquette {
+    display: inline-block;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.55rem;
+    border-radius: 2px;
+    color: #fff;
+    margin-bottom: 0.6rem;
+  }
+  .chip--critique .chip__etiquette { background: var(--critical); }
+  .chip--moyen .chip__etiquette { background: var(--warning); }
+  .chip--info .chip__etiquette { background: var(--muted); }
+  .chip p { margin: 0; font-size: 0.88rem; color: var(--muted); }
+
+  /* -------- carte rapport exemple -------- */
+  .carte-rapport {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+    margin-top: 2.2rem;
+  }
+  @media (max-width: 640px) {
+    .carte-rapport { flex-direction: column; text-align: center; }
+  }
+  .carte-rapport__vignette {
+    flex: none;
+    width: 96px;
+    height: 128px;
+    border: 1px solid var(--border);
+    background:
+      linear-gradient(var(--bg-alt), var(--bg-alt)) content-box,
+      repeating-linear-gradient(var(--border) 0 2px, transparent 2px 14px);
+    padding: 14px 10px;
+    background-clip: content-box, padding-box;
+    position: relative;
+  }
+  .carte-rapport__vignette::before {
+    content: "";
+    position: absolute;
+    top: 14px; left: 10px; right: 10px;
+    height: 3px;
+    background: var(--accent);
+  }
+  .carte-rapport__texte { flex: 1; }
+  .carte-rapport__texte p { margin: 0.4rem 0 1.2rem; color: var(--muted); font-size: 0.92rem; }
+
+  /* -------- a propos / contact -------- */
+  .bio { display: flex; gap: 2.5rem; align-items: flex-start; }
+  @media (max-width: 700px) { .bio { flex-direction: column; } }
+  .bio__init {
+    flex: none;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--accent);
+  }
+
+  .contact-ligne {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .contact-ligne a {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+  }
+
+  footer {
+    padding: 3rem 0 4rem;
+    border-top: 1px solid var(--border);
+  }
+  footer p { font-size: 0.8rem; color: var(--muted); margin: 0.4rem 0; }
+
+  ::selection { background: var(--accent); color: var(--charcoal); }
+</style>
+</head>
+<body>
+
+<nav class="barre">
+  <a class="barre__marque" href="#haut">
+    <svg class="mono" viewBox="0 0 100 100" aria-hidden="true">
+      <path class="trait-t" d="M18 24 L88 24"/>
+      <path class="trait-t" d="M58 24 L58 44"/>
+      <path class="trait-t" d="M58 60 L58 80"/>
+      <path class="trait-l" d="M30 34 L30 80"/>
+      <path class="trait-l" d="M30 52 L74 52"/>
+    </svg>
+    <span>trustline</span>
+  </a>
+  <ul class="barre__liens">
+    <li><a href="#fonctionnement">Comment ça marche</a></li>
+    <li><a href="#rapport">Rapport d'exemple</a></li>
+    <li><a href="#score">Score CLM</a></li>
+    <li><a href="#apropos">À propos</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<header class="hero" id="haut">
+  <svg class="filigrane mono" viewBox="0 0 100 100" aria-hidden="true" style="width:22rem; height:22rem; top:-4rem; right:-6rem;">
+    <path class="trait-t" d="M18 24 L88 24"/>
+    <path class="trait-t" d="M58 24 L58 44"/>
+    <path class="trait-t" d="M58 60 L58 80"/>
+    <path class="trait-l" d="M30 34 L30 80"/>
+    <path class="trait-l" d="M30 52 L74 52"/>
+  </svg>
+  <div class="conteneur">
+    <p class="hero__oeil">Cartographie du cycle de vie des certificats TLS</p>
+    <h1>la confiance ne se rompt jamais d'un coup —<br />elle s'effiloche, un certificat oublié à la fois</h1>
+    <p class="hero__sous">Trustline reconstitue l'historique complet des certificats d'un domaine — émis, expirés, oubliés, ou jamais autorisés — et le traduit en un score de maturité clair, accompagné de recommandations concrètes.</p>
+    <div class="hero__actions">
+      <a class="bouton bouton--plein" href="#rapport">Voir un rapport d'exemple</a>
+      <a class="bouton bouton--vide" href="#contact">Me contacter</a>
+    </div>
+  </div>
+</header>
+
+<section id="ce-que-fait">
+  <div class="conteneur">
+    <p class="eyebrow">Ce que fait Trustline</p>
+    <h2>un inventaire, pas juste une alerte d'expiration</h2>
+    <p>Chaque certificat TLS a une histoire : qui l'a émis, quand, pour quel usage, et s'il est toujours sous contrôle. Avec le temps, cette histoire se disperse — entre équipes, prestataires, sous-domaines oubliés. Trustline la reconstitue à partir de deux sources complémentaires : les journaux publics de Certificate Transparency, où tout certificat public reste enregistré indéfiniment, et une vérification en direct de ce qui est réellement servi par le domaine.</p>
+    <p>Le résultat n'est pas une simple liste de dates d'expiration : c'est un inventaire complet, les écarts entre ce qui a été émis et ce qui est en ligne, et un score qui dit — en un chiffre — si la situation est saine ou si elle demande de l'attention.</p>
+
+    <details>
+      <summary>Pour les lecteurs techniques</summary>
+      <div class="contenu-tech">
+        <ul>
+          <li><strong>Collecte passive</strong> — interrogation de crt.sh (Certificate Transparency) et du DNS public. Aucune connexion vers le domaine cible.</li>
+          <li><strong>Collecte active</strong> — un handshake TLS réel, à débit plafonné et restreint aux ports de services chiffrés, distingue ce qui est servi de ce qui passe une validation stricte.</li>
+          <li><strong>Analyse</strong> — fusion des deux sources, détection des écarts (un certificat servi absent de l'historique CT est le signal le plus parlant), score de maturité pondéré par gravité.</li>
+          <li><strong>Garde-fous</strong> — aucune collecte sans autorisation explicite dans une liste blanche, aucun scan de ports large, aucune recherche de vulnérabilité, aucune donnée sensible stockée.</li>
+          <li><strong>Format</strong> — JSON comme pivot entre chaque étape ; Python simple, dépendances minimales, aucun framework.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="alt" id="fonctionnement">
+  <div class="conteneur conteneur--large">
+    <p class="eyebrow">Comment ça marche</p>
+    <h2>quatre étapes, une seule source de vérité</h2>
+    <div class="pipeline">
+      <div class="etape">
+        <div class="etape__num">01</div>
+        <h3>Passif</h3>
+        <p>Journaux Certificate Transparency et DNS public. Aucune connexion vers la cible.</p>
+      </div>
+      <div class="etape">
+        <div class="etape__num">02</div>
+        <h3>Actif</h3>
+        <p>Handshake TLS réel, à débit plafonné, sur les seuls ports de services chiffrés.</p>
+      </div>
+      <div class="etape">
+        <div class="etape__num">03</div>
+        <h3>Analyse</h3>
+        <p>Fusion des deux sources, détection des écarts, calcul du score de maturité.</p>
+      </div>
+      <div class="etape">
+        <div class="etape__num">04</div>
+        <h3>Rapport</h3>
+        <p>Un document unique, lisible par un board comme par une équipe technique.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="score">
+  <div class="conteneur">
+    <p class="eyebrow">Score de maturité CLM</p>
+    <h2>un chiffre, trois niveaux de gravité</h2>
+    <p class="mute">Chaque constat pèse sur le score selon sa gravité — un certificat expiré ne compte pas comme un certificat wildcard. Le score part de 100 et se lit en trois paliers.</p>
+
+    <div class="jauge-demo">
+      <div class="jauge-demo__chiffre">61<span style="font-size:1.4rem; color:var(--muted);">/100</span></div>
+      <div class="jauge-demo__niveau">maturité moyenne — exemple</div>
+      <div class="jauge-piste"><div class="jauge-remplie"></div></div>
+      <div class="jauge-legende"><span>0 · faible</span><span>50 · moyenne</span><span>80 · bonne</span></div>
+    </div>
+
+    <div class="grille-gravite">
+      <div class="chip chip--critique">
+        <span class="chip__etiquette">Critique</span>
+        <p>Certificat expiré, auto-signé, ou absent de l'historique CT connu.</p>
+      </div>
+      <div class="chip chip--moyen">
+        <span class="chip__etiquette">Moyen</span>
+        <p>Expiration proche, absence de CAA, chaîne incomplète.</p>
+      </div>
+      <div class="chip chip--info">
+        <span class="chip__etiquette">Info</span>
+        <p>Certificat wildcard détecté — à surveiller, pas nécessairement à corriger.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="rapport">
+  <div class="conteneur">
+    <p class="eyebrow">Rapport d'exemple</p>
+    <h2>à quoi ressemble un rapport Trustline</h2>
+    <div class="carte-rapport">
+      <div class="carte-rapport__vignette" aria-hidden="true"></div>
+      <div class="carte-rapport__texte">
+        <h3 style="font-family:var(--font-sans); font-size:0.95rem; letter-spacing:0.04em; text-transform:uppercase; margin:0;">cabinet-exemple.fr — domaine entièrement fictif</h3>
+        <p>Couverture avec résumé exécutif en langage clair, indicateurs clés, jauge de score, constats détaillés avec conseils, et annexes techniques. Aucune donnée réelle n'y figure : ce rapport illustre la structure, pas un audit réel.</p>
+        <a class="bouton bouton--plein" href="demo/rapport-demo-cabinet-exemple.pdf">Télécharger l'exemple (PDF)</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="valide">
+  <div class="conteneur">
+    <p class="eyebrow">Validé en conditions réelles</p>
+    <h2>au-delà de l'exemple</h2>
+    <p>Trustline est utilisé et validé sur mes propres domaines de production — dont <strong>identity-ops.com</strong> — dans le respect strict d'un cadre : aucune collecte sans autorisation explicite consignée dans une liste blanche, débit plafonné entre chaque connexion, aucune donnée sensible stockée.</p>
+  </div>
+</section>
+
+<section class="alt" id="apropos">
+  <div class="conteneur">
+    <p class="eyebrow">À propos</p>
+    <div class="bio">
+      <div class="bio__init" aria-hidden="true">AB</div>
+      <div>
+        <h2 style="margin-bottom:0.8rem;">un projet né de la pratique</h2>
+        <p>Expert en gestion des identités au sein d'une équipe Global IT Operations : sécurité des infrastructures, IAM, PKI, cycle de vie des certificats. Comparatifs de solutions IAM/CLM (Evertrust Horizon, Digital Berry, DigiCert, Venafi). J'enseigne également des modules d'informatique dans le supérieur.</p>
+        <p class="mute">Trustline est un projet personnel, construit pour rendre visible ce qui, dans la gestion des certificats, reste trop souvent implicite.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="conteneur">
+    <p class="eyebrow">Contact</p>
+    <h2>une mission, un poste, une question technique</h2>
+    <p class="mute">Ce projet est personnel, à usage portfolio et pédagogique — aucune exploitation commerciale actuellement.</p>
+    <div class="contact-ligne">
+      <a href="mailto:contact@identity-ops.com">contact@identity-ops.com</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="conteneur">
+    <p>Trustline — certificate intelligence. Projet personnel, portfolio et pédagogique.</p>
+    <p>Aucune exploitation commerciale. Le rapport d'exemple ci-dessus est entièrement fictif.</p>
+    <div class="pied-liens">
+      <a href="https://github.com/Aissame372/trustline-showcase">Dépôt de ce site</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
