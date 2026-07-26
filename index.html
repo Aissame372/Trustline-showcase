@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Trustline — certificate intelligence</title>
 <meta name="description" content="Trustline cartographie le cycle de vie des certificats TLS d'un domaine et produit un score de maturité clair, avec des recommandations concrètes." />
-<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgZmlsbD0ibm9uZSI+CiAgPHBhdGggZD0iTTE4IDI0IEw4OCAyNCIgc3Ryb2tlPSIjMUIyNDMwIiBzdHJva2Utd2lkdGg9IjE0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNNTggMjQgTDU4IDQ0IiBzdHJva2U9IiMxQjI0MzAiIHN0cm9rZS13aWR0aD0iMTQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik01OCA2MCBMNTggODAiIHN0cm9rZT0iIzFCMjQzMCIgc3Ryb2tlLXdpZHRoPSIxNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTMwIDM0IEwzMCA4MCIgc3Ryb2tlPSIjQjA4RDU3IiBzdHJva2Utd2lkdGg9IjE0IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNMzAgNTIgTDc0IDUyIiBzdHJva2U9IiNCMDhENTciIHN0cm9rZS13aWR0aD0iMTQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K" />
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHBhdGggZD0iTTMgMTYgTDExIDE2IiBzdHJva2U9IiMxQjI0MzAiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTExIDE2IFExNiA1IDIxIDE2IiBzdHJva2U9IiNCMDhENTciIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+CiAgPHBhdGggZD0iTTIxIDE2IEwyOSAxNiIgc3Ryb2tlPSIjMUIyNDMwIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=" />
 <style>
   :root {
     --ivoire: #F6F2EA;
@@ -28,6 +28,7 @@
 
     --font-display: 'Cormorant', Garamond, 'Apple Garamond', Georgia, serif;
     --font-sans: 'Jost', Futura, 'Century Gothic', Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Roboto Mono', Menlo, Consolas, monospace;
 
     color-scheme: light;
   }
@@ -48,38 +49,20 @@
     }
   }
   :root[data-theme="dark"] {
-    --bg: var(--charcoal);
-    --bg-alt: #222E3D;
-    --ink: var(--ivoire);
-    --muted: var(--gris-sombre);
-    --accent: var(--laiton-clair);
-    --surface: #23303F;
-    --border: rgba(246, 242, 234, 0.16);
-    --critical: #e08277;
-    --warning: #e3ab53;
-    --good: #6fbf94;
+    --bg: var(--charcoal); --bg-alt: #222E3D; --ink: var(--ivoire); --muted: var(--gris-sombre);
+    --accent: var(--laiton-clair); --surface: #23303F; --border: rgba(246, 242, 234, 0.16);
+    --critical: #e08277; --warning: #e3ab53; --good: #6fbf94;
     color-scheme: dark;
   }
   :root[data-theme="light"] {
-    --bg: var(--ivoire);
-    --bg-alt: #EDE7DA;
-    --ink: var(--charcoal);
-    --muted: var(--gris);
-    --accent: var(--laiton);
-    --surface: #FFFFFF;
-    --border: rgba(27, 36, 48, 0.14);
-    --critical: #a8382f;
-    --warning: #b3791e;
-    --good: #2f6f4e;
+    --bg: var(--ivoire); --bg-alt: #EDE7DA; --ink: var(--charcoal); --muted: var(--gris);
+    --accent: var(--laiton); --surface: #FFFFFF; --border: rgba(27, 36, 48, 0.14);
+    --critical: #a8382f; --warning: #b3791e; --good: #2f6f4e;
     color-scheme: light;
   }
 
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
-  }
 
   body {
     margin: 0;
@@ -92,181 +75,144 @@
   }
 
   a { color: inherit; }
-  a:focus-visible, button:focus-visible, summary:focus-visible {
+  a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, textarea:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 3px;
   }
 
-  .conteneur {
-    max-width: 46rem;
-    margin: 0 auto;
-    padding: 0 1.75rem;
+  .conteneur { max-width: 46rem; margin: 0 auto; padding: 0 1.75rem; }
+  .conteneur--large { max-width: 62rem; }
+
+  /* -------- glyphe de marque : la ligne renouee -------- */
+  .glyphe { display: block; overflow: visible; }
+  .glyphe path { fill: none; stroke-linecap: round; }
+  .glyphe .brin { stroke: var(--ink); stroke-width: 3.5; }
+  .glyphe .suture { stroke: var(--accent); stroke-width: 3.5; }
+  .glyphe--hero .brin, .glyphe--hero .suture { stroke-width: 2.6; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .glyphe.anime path {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: tracer 0.6s ease-out forwards;
+    }
+    .glyphe.anime .brin:first-child { animation-delay: 0s; }
+    .glyphe.anime .suture { animation-delay: 0.45s; animation-duration: 0.5s; }
+    .glyphe.anime .brin:last-child { animation-delay: 0.85s; }
+    .glyphe.anime .suture {
+      animation-name: tracer, lueur;
+    }
   }
-  .conteneur--large { max-width: 60rem; }
+  @keyframes tracer { to { stroke-dashoffset: 0; } }
+  @keyframes lueur {
+    0%, 60% { filter: drop-shadow(0 0 0 transparent); }
+    80% { filter: drop-shadow(0 0 6px var(--accent)); }
+    100% { filter: drop-shadow(0 0 0 transparent); }
+  }
+
+  /* -------- marque (nav) -------- */
+  .marque { display: inline-flex; align-items: baseline; gap: 0.5rem; text-decoration: none; white-space: nowrap; }
+  .marque .glyphe { width: 1.5rem; height: 0.75rem; align-self: center; flex: none; }
+  .marque__mot { font-family: var(--font-display); letter-spacing: 0.01em; }
+  .marque--nav { font-size: 1.05rem; color: var(--ink); }
+  .marque--nav .glyphe { width: 1.15rem; height: 0.58rem; }
 
   /* -------- navigation -------- */
   nav.barre {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    position: sticky; top: 0; z-index: 30;
+    display: flex; align-items: center; justify-content: space-between;
     padding: 1rem 1.75rem;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
   }
-  .barre__marque { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
-  .barre__marque svg { width: 1.6rem; height: 1.6rem; }
-  .barre__marque span {
-    font-family: var(--font-display);
-    font-size: 1.15rem;
-    letter-spacing: 0.06em;
-  }
   .barre__liens { display: flex; gap: 1.6rem; list-style: none; margin: 0; padding: 0; }
-  .barre__liens a {
-    text-decoration: none;
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
+  .barre__liens a { text-decoration: none; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
   .barre__liens a:hover { color: var(--accent); }
-  @media (max-width: 640px) {
-    .barre__liens { display: none; }
-  }
+  @media (max-width: 640px) { .barre__liens { display: none; } }
 
-  /* -------- motif du monogramme (reutilise en filigrane) -------- */
-  .mono .trait-t { stroke: var(--ink); }
-  .mono .trait-l { stroke: var(--accent); }
-  .mono path { fill: none; stroke-width: 11; stroke-linecap: round; }
-
-  .filigrane {
-    position: absolute;
-    opacity: 0.05;
-    pointer-events: none;
-  }
-  .filigrane .trait-t, .filigrane .trait-l { stroke: var(--ink); stroke-width: 6; }
-
-  /* -------- hero -------- */
+  /* -------- hero : toujours sombre, moment cinematique deliberer -------- */
   .hero {
     position: relative;
     overflow: hidden;
-    padding: 6.5rem 0 5rem;
-    text-align: center;
+    padding: 8rem 0 7rem;
+    background: var(--charcoal);
+    color: var(--ivoire);
+    color-scheme: dark;
   }
+  .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.5; }
+  .hero__contenu { position: relative; z-index: 1; }
+  .hero__marque { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 3rem; }
+  .hero__marque .glyphe--hero { width: 5.5rem; height: 2.75rem; }
+  .hero__mot { font-family: var(--font-display); font-size: clamp(2.6rem, 6vw, 4.2rem); font-weight: 300; letter-spacing: -0.01em; }
+  .hero__mot .demi { color: var(--laiton-clair); }
   .hero__oeil {
-    font-family: var(--font-sans);
-    font-size: 0.78rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1.4rem;
+    font-family: var(--font-sans); font-size: 0.78rem; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--laiton-clair); margin: 0 0 1.2rem;
   }
   .hero h1 {
-    font-family: var(--font-display);
-    font-weight: 300;
-    font-size: clamp(2.1rem, 5.2vw, 3.6rem);
-    line-height: 1.18;
-    letter-spacing: 0.01em;
-    text-wrap: balance;
-    margin: 0 0 1.5rem;
+    font-family: var(--font-display); font-weight: 300;
+    font-size: clamp(2rem, 4.6vw, 3.1rem); line-height: 1.22; letter-spacing: 0.005em;
+    text-wrap: balance; margin: 0 0 1.6rem; max-width: 34rem;
   }
-  .hero__sous {
-    max-width: 38rem;
-    margin: 0 auto 2.6rem;
-    color: var(--muted);
-    font-size: 1.05rem;
-  }
-  .hero__actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .hero__sous { max-width: 32rem; color: var(--gris-sombre); font-size: 1.05rem; margin: 0 0 2.6rem; }
+  .hero__actions { display: flex; gap: 1rem; flex-wrap: wrap; }
 
   .bouton {
-    display: inline-block;
-    padding: 0.85rem 1.9rem;
-    border-radius: 2px;
-    text-decoration: none;
-    font-size: 0.82rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    border: 1px solid var(--accent);
-    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    display: inline-block; padding: 0.85rem 1.9rem; border-radius: 1px; text-decoration: none;
+    font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--laiton-clair);
+    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease; cursor: pointer; background: none;
   }
-  .bouton--plein { background: var(--accent); color: var(--charcoal); }
+  .bouton--plein { background: var(--laiton-clair); color: var(--charcoal); }
   .bouton--plein:hover { transform: translateY(-1px); }
-  .bouton--vide { background: transparent; color: var(--ink); }
-  .bouton--vide:hover { background: var(--accent); color: var(--charcoal); }
+  .bouton--vide { color: var(--ivoire); }
+  .bouton--vide:hover { background: var(--laiton-clair); color: var(--charcoal); }
 
-  /* -------- structure des sections -------- */
-  section { padding: 5rem 0; }
+  /* boutons hors hero (theme adaptatif) */
+  section .bouton--plein, section .bouton--vide { border-color: var(--accent); }
+  section .bouton--plein { background: var(--accent); color: var(--charcoal); }
+  section .bouton--vide { color: var(--ink); }
+  section .bouton--vide:hover { background: var(--accent); color: var(--charcoal); }
+
+  /* -------- reveal au scroll -------- */
+  .reveal { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+  }
+
+  section { padding: 5.5rem 0; }
   section.alt { background: var(--bg-alt); }
-  .eyebrow {
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin: 0 0 0.8rem;
-  }
+  .eyebrow { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin: 0 0 0.8rem; }
   h2 {
-    font-family: var(--font-display);
-    font-weight: 300;
-    font-size: clamp(1.7rem, 3.4vw, 2.3rem);
-    letter-spacing: 0.01em;
-    text-wrap: balance;
-    margin: 0 0 1.4rem;
+    font-family: var(--font-display); font-weight: 300; font-size: clamp(1.7rem, 3.4vw, 2.3rem);
+    letter-spacing: 0.01em; text-wrap: balance; margin: 0 0 1.4rem;
   }
-  section p { color: var(--ink); }
   section p.mute { color: var(--muted); }
 
-  .diviseur {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 0;
-  }
-
-  /* -------- pipeline (sequence numerotee) -------- */
-  .pipeline {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.6rem;
-    margin-top: 2.5rem;
-  }
-  @media (max-width: 780px) {
-    .pipeline { grid-template-columns: 1fr 1fr; }
-  }
-  @media (max-width: 480px) {
-    .pipeline { grid-template-columns: 1fr; }
-  }
-  .etape__num {
-    font-family: var(--font-display);
-    font-size: 2.1rem;
-    color: var(--accent);
-    line-height: 1;
-    margin-bottom: 0.6rem;
-  }
-  .etape h3 {
-    font-family: var(--font-sans);
-    font-size: 0.95rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    margin: 0 0 0.5rem;
-  }
+  /* -------- pipeline -------- */
+  .pipeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.6rem; margin-top: 2.5rem; }
+  @media (max-width: 780px) { .pipeline { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .pipeline { grid-template-columns: 1fr; } }
+  .etape__num { font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); letter-spacing: 0.05em; margin-bottom: 0.7rem; }
+  .etape h3 { font-family: var(--font-sans); font-size: 0.95rem; letter-spacing: 0.04em; text-transform: uppercase; margin: 0 0 0.5rem; }
   .etape p { font-size: 0.92rem; color: var(--muted); margin: 0; }
 
-  /* -------- details techniques -------- */
-  details {
-    margin-top: 2rem;
-    border-top: 1px solid var(--border);
-    padding-top: 1.4rem;
+  /* -------- panneau terminal (constats, pour public technique) -------- */
+  .terminal {
+    background: var(--charcoal); color: #d9d4c8; border-radius: 4px; overflow: hidden;
+    font-family: var(--font-mono); font-size: 0.82rem; margin-top: 1.6rem; border: 1px solid var(--border);
   }
-  summary {
-    cursor: pointer;
-    font-size: 0.85rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--accent);
-    list-style: none;
-  }
+  .terminal__barre { display: flex; gap: 0.4rem; padding: 0.7rem 0.9rem; background: rgba(255,255,255,0.04); }
+  .terminal__point { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.18); }
+  .terminal__corps { padding: 1.1rem 1.3rem 1.3rem; white-space: pre-wrap; line-height: 1.75; }
+  .terminal__corps .crit { color: #e08277; }
+  .terminal__corps .moy { color: #e3ab53; }
+  .terminal__corps .info { color: #8E9AA8; }
+  .terminal__corps .att { color: #6fbf94; }
+
+  details { margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.4rem; }
+  summary { cursor: pointer; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); list-style: none; }
   summary::-webkit-details-marker { display: none; }
   summary::before { content: "+ "; }
   details[open] summary::before { content: "– "; }
@@ -276,143 +222,57 @@
   details .contenu-tech li strong { color: var(--ink); }
 
   /* -------- jauge score -------- */
-  .jauge-demo { max-width: 26rem; margin: 2.5rem auto 0; }
-  .jauge-demo__chiffre {
-    font-family: var(--font-display);
-    font-size: 3rem;
-    text-align: center;
-    margin-bottom: 0.3rem;
-  }
-  .jauge-demo__niveau {
-    text-align: center;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 1rem;
-  }
-  .jauge-piste {
-    height: 8px;
-    border-radius: 4px;
-    background: var(--border);
-    overflow: hidden;
-  }
-  .jauge-remplie {
-    height: 100%;
-    width: 61%;
-    background: var(--warning);
-    border-radius: 4px;
-  }
-  .jauge-legende {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.72rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-top: 0.6rem;
-  }
+  .jauge-demo { max-width: 26rem; margin: 2.5rem 0 0; }
+  .jauge-demo__chiffre { font-family: var(--font-display); font-size: 3rem; margin-bottom: 0.3rem; }
+  .jauge-demo__niveau { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .jauge-piste { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; }
+  .jauge-remplie { height: 100%; width: 0; background: var(--warning); border-radius: 4px; transition: width 1.1s cubic-bezier(.2,.8,.2,1); }
+  .jauge-remplie.visible { width: 61%; }
+  .jauge-legende { display: flex; justify-content: space-between; font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); margin-top: 0.6rem; }
 
-  .grille-gravite {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-top: 2.2rem;
-  }
+  .grille-gravite { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2.2rem; }
   @media (max-width: 600px) { .grille-gravite { grid-template-columns: 1fr; } }
-  .chip {
-    border-radius: 3px;
-    padding: 1.1rem 1.2rem;
-    border: 1px solid var(--border);
-    background: var(--surface);
-  }
-  .chip__etiquette {
-    display: inline-block;
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0.2rem 0.55rem;
-    border-radius: 2px;
-    color: #fff;
-    margin-bottom: 0.6rem;
-  }
+  .chip { border-radius: 3px; padding: 1.1rem 1.2rem; border: 1px solid var(--border); background: var(--surface); }
+  .chip__etiquette { display: inline-block; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 2px; color: #fff; margin-bottom: 0.6rem; }
   .chip--critique .chip__etiquette { background: var(--critical); }
   .chip--moyen .chip__etiquette { background: var(--warning); }
   .chip--info .chip__etiquette { background: var(--muted); }
   .chip p { margin: 0; font-size: 0.88rem; color: var(--muted); }
 
   /* -------- carte rapport exemple -------- */
-  .carte-rapport {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 2rem;
-    margin-top: 2.2rem;
-  }
-  @media (max-width: 640px) {
-    .carte-rapport { flex-direction: column; text-align: center; }
-  }
+  .carte-rapport { display: flex; gap: 2rem; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 2rem; margin-top: 2.2rem; }
+  @media (max-width: 640px) { .carte-rapport { flex-direction: column; text-align: center; } }
   .carte-rapport__vignette {
-    flex: none;
-    width: 96px;
-    height: 128px;
-    border: 1px solid var(--border);
-    background:
-      linear-gradient(var(--bg-alt), var(--bg-alt)) content-box,
-      repeating-linear-gradient(var(--border) 0 2px, transparent 2px 14px);
-    padding: 14px 10px;
-    background-clip: content-box, padding-box;
-    position: relative;
+    flex: none; width: 96px; height: 128px; border: 1px solid var(--border);
+    background: linear-gradient(var(--bg-alt), var(--bg-alt)) content-box, repeating-linear-gradient(var(--border) 0 2px, transparent 2px 14px);
+    padding: 14px 10px; background-clip: content-box, padding-box; position: relative;
   }
-  .carte-rapport__vignette::before {
-    content: "";
-    position: absolute;
-    top: 14px; left: 10px; right: 10px;
-    height: 3px;
-    background: var(--accent);
-  }
+  .carte-rapport__vignette::before { content: ""; position: absolute; top: 14px; left: 10px; right: 10px; height: 3px; background: var(--accent); }
   .carte-rapport__texte { flex: 1; }
   .carte-rapport__texte p { margin: 0.4rem 0 1.2rem; color: var(--muted); font-size: 0.92rem; }
 
-  /* -------- a propos / contact -------- */
+  /* -------- a propos -------- */
   .bio { display: flex; gap: 2.5rem; align-items: flex-start; }
   @media (max-width: 700px) { .bio { flex-direction: column; } }
-  .bio__init {
-    flex: none;
-    width: 4.5rem;
-    height: 4.5rem;
-    border-radius: 50%;
-    border: 1px solid var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-size: 1.6rem;
-    color: var(--accent);
-  }
+  .bio__glyphe { flex: none; width: 4.5rem; height: 4.5rem; border-radius: 50%; border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; }
+  .bio__glyphe .glyphe { width: 2.2rem; height: 1.1rem; }
 
-  .contact-ligne {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 2rem;
+  /* -------- formulaire de contact -------- */
+  form.contact {
+    display: grid; gap: 1.1rem; max-width: 32rem; margin-top: 2.2rem;
   }
-  .contact-ligne a {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    text-decoration: none;
-    border-bottom: 1px solid var(--accent);
+  form.contact label { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; display: block; }
+  form.contact input, form.contact textarea {
+    width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 2px;
+    padding: 0.8rem 0.9rem; font-family: var(--font-sans); font-size: 0.95rem; color: var(--ink);
   }
+  form.contact textarea { min-height: 8rem; resize: vertical; }
+  form.contact .honeypot { position: absolute; left: -9999px; }
+  .contact__statut { font-size: 0.85rem; margin-top: 0.4rem; }
+  .contact__statut[data-etat="ok"] { color: var(--good); }
+  .contact__statut[data-etat="erreur"] { color: var(--critical); }
 
-  footer {
-    padding: 3rem 0 4rem;
-    border-top: 1px solid var(--border);
-  }
+  footer { padding: 3rem 0 4rem; border-top: 1px solid var(--border); }
   footer p { font-size: 0.8rem; color: var(--muted); margin: 0.4rem 0; }
   footer .pied-liens { display: flex; gap: 1.2rem; margin-top: 1rem; }
   footer .pied-liens a { font-size: 0.78rem; text-decoration: none; color: var(--muted); border-bottom: 1px solid var(--border); }
@@ -424,15 +284,13 @@
 <body>
 
 <nav class="barre">
-  <a class="barre__marque" href="#haut">
-    <svg class="mono" viewBox="0 0 100 100" aria-hidden="true">
-      <path class="trait-t" d="M18 24 L88 24"/>
-      <path class="trait-t" d="M58 24 L58 44"/>
-      <path class="trait-t" d="M58 60 L58 80"/>
-      <path class="trait-l" d="M30 34 L30 80"/>
-      <path class="trait-l" d="M30 52 L74 52"/>
+  <a class="marque marque--nav" href="#haut">
+    <svg class="glyphe" viewBox="0 0 64 32" aria-hidden="true">
+      <path class="brin" d="M2 16 L18 16"/>
+      <path class="suture" d="M18 16 Q26 3 34 16"/>
+      <path class="brin" d="M34 16 L60 16"/>
     </svg>
-    <span>trustline</span>
+    <span class="marque__mot">trustline</span>
   </a>
   <ul class="barre__liens">
     <li><a href="#fonctionnement">Comment ça marche</a></li>
@@ -444,14 +302,15 @@
 </nav>
 
 <header class="hero" id="haut">
-  <svg class="filigrane mono" viewBox="0 0 100 100" aria-hidden="true" style="width:22rem; height:22rem; top:-4rem; right:-6rem;">
-    <path class="trait-t" d="M18 24 L88 24"/>
-    <path class="trait-t" d="M58 24 L58 44"/>
-    <path class="trait-t" d="M58 60 L58 80"/>
-    <path class="trait-l" d="M30 34 L30 80"/>
-    <path class="trait-l" d="M30 52 L74 52"/>
-  </svg>
-  <div class="conteneur">
+  <canvas id="reseau" aria-hidden="true"></canvas>
+  <div class="conteneur hero__contenu">
+    <div class="hero__marque">
+      <svg class="glyphe glyphe--hero anime" viewBox="0 0 64 32" aria-hidden="true">
+        <path class="brin" d="M2 16 L18 16"/>
+        <path class="suture" d="M18 16 Q26 3 34 16"/>
+        <path class="brin" d="M34 16 L60 16"/>
+      </svg>
+    </div>
     <p class="hero__oeil">Cartographie du cycle de vie des certificats TLS</p>
     <h1>la confiance ne se rompt jamais d'un coup —<br />elle s'effiloche, un certificat oublié à la fois</h1>
     <p class="hero__sous">Trustline reconstitue l'historique complet des certificats d'un domaine — émis, expirés, oubliés, ou jamais autorisés — et le traduit en un score de maturité clair, accompagné de recommandations concrètes.</p>
@@ -462,12 +321,24 @@
   </div>
 </header>
 
-<section id="ce-que-fait">
+<section id="ce-que-fait" class="reveal">
   <div class="conteneur">
     <p class="eyebrow">Ce que fait Trustline</p>
     <h2>un inventaire, pas juste une alerte d'expiration</h2>
     <p>Chaque certificat TLS a une histoire : qui l'a émis, quand, pour quel usage, et s'il est toujours sous contrôle. Avec le temps, cette histoire se disperse — entre équipes, prestataires, sous-domaines oubliés. Trustline la reconstitue à partir de deux sources complémentaires : les journaux publics de Certificate Transparency, où tout certificat public reste enregistré indéfiniment, et une vérification en direct de ce qui est réellement servi par le domaine.</p>
     <p>Le résultat n'est pas une simple liste de dates d'expiration : c'est un inventaire complet, les écarts entre ce qui a été émis et ce qui est en ligne, et un score qui dit — en un chiffre — si la situation est saine ou si elle demande de l'attention.</p>
+
+    <div class="terminal">
+      <div class="terminal__barre"><span class="terminal__point"></span><span class="terminal__point"></span><span class="terminal__point"></span></div>
+      <div class="terminal__corps">$ trustline analyze cabinet-exemple.fr
+
+score de maturité clm : 15/100 — <span class="crit">maturité faible</span>
+
+<span class="crit">[critique]</span>  extranet.cabinet-exemple.fr — certificat auto-signé, absent de l'historique CT
+<span class="crit">[critique]</span>  www.cabinet-exemple.fr — expire dans 17 jour(s)
+<span class="moy">[moyen]</span>     identity-ops.com — aucun enregistrement CAA
+<span class="info">[info]</span>     *.cabinet-exemple.fr — certificat wildcard détecté</div>
+    </div>
 
     <details>
       <summary>Pour les lecteurs techniques</summary>
@@ -484,36 +355,20 @@
   </div>
 </section>
 
-<section class="alt" id="fonctionnement">
+<section class="alt reveal" id="fonctionnement">
   <div class="conteneur conteneur--large">
     <p class="eyebrow">Comment ça marche</p>
     <h2>quatre étapes, une seule source de vérité</h2>
     <div class="pipeline">
-      <div class="etape">
-        <div class="etape__num">01</div>
-        <h3>Passif</h3>
-        <p>Journaux Certificate Transparency et DNS public. Aucune connexion vers la cible.</p>
-      </div>
-      <div class="etape">
-        <div class="etape__num">02</div>
-        <h3>Actif</h3>
-        <p>Handshake TLS réel, à débit plafonné, sur les seuls ports de services chiffrés.</p>
-      </div>
-      <div class="etape">
-        <div class="etape__num">03</div>
-        <h3>Analyse</h3>
-        <p>Fusion des deux sources, détection des écarts, calcul du score de maturité.</p>
-      </div>
-      <div class="etape">
-        <div class="etape__num">04</div>
-        <h3>Rapport</h3>
-        <p>Un document unique, lisible par un board comme par une équipe technique.</p>
-      </div>
+      <div class="etape"><div class="etape__num">01</div><h3>Passif</h3><p>Journaux Certificate Transparency et DNS public. Aucune connexion vers la cible.</p></div>
+      <div class="etape"><div class="etape__num">02</div><h3>Actif</h3><p>Handshake TLS réel, à débit plafonné, sur les seuls ports de services chiffrés.</p></div>
+      <div class="etape"><div class="etape__num">03</div><h3>Analyse</h3><p>Fusion des deux sources, détection des écarts, calcul du score de maturité.</p></div>
+      <div class="etape"><div class="etape__num">04</div><h3>Rapport</h3><p>Un document unique, lisible par un board comme par une équipe technique.</p></div>
     </div>
   </div>
 </section>
 
-<section id="score">
+<section id="score" class="reveal">
   <div class="conteneur">
     <p class="eyebrow">Score de maturité CLM</p>
     <h2>un chiffre, trois niveaux de gravité</h2>
@@ -522,28 +377,19 @@
     <div class="jauge-demo">
       <div class="jauge-demo__chiffre">61<span style="font-size:1.4rem; color:var(--muted);">/100</span></div>
       <div class="jauge-demo__niveau">maturité moyenne — exemple</div>
-      <div class="jauge-piste"><div class="jauge-remplie"></div></div>
+      <div class="jauge-piste"><div class="jauge-remplie" id="jauge"></div></div>
       <div class="jauge-legende"><span>0 · faible</span><span>50 · moyenne</span><span>80 · bonne</span></div>
     </div>
 
     <div class="grille-gravite">
-      <div class="chip chip--critique">
-        <span class="chip__etiquette">Critique</span>
-        <p>Certificat expiré, auto-signé, ou absent de l'historique CT connu.</p>
-      </div>
-      <div class="chip chip--moyen">
-        <span class="chip__etiquette">Moyen</span>
-        <p>Expiration proche, absence de CAA, chaîne incomplète.</p>
-      </div>
-      <div class="chip chip--info">
-        <span class="chip__etiquette">Info</span>
-        <p>Certificat wildcard détecté — à surveiller, pas nécessairement à corriger.</p>
-      </div>
+      <div class="chip chip--critique"><span class="chip__etiquette">Critique</span><p>Certificat expiré, auto-signé, ou absent de l'historique CT connu.</p></div>
+      <div class="chip chip--moyen"><span class="chip__etiquette">Moyen</span><p>Expiration proche, absence de CAA, chaîne incomplète.</p></div>
+      <div class="chip chip--info"><span class="chip__etiquette">Info</span><p>Certificat wildcard détecté — à surveiller, pas nécessairement à corriger.</p></div>
     </div>
   </div>
 </section>
 
-<section class="alt" id="rapport">
+<section class="alt reveal" id="rapport">
   <div class="conteneur">
     <p class="eyebrow">Rapport d'exemple</p>
     <h2>à quoi ressemble un rapport Trustline</h2>
@@ -558,7 +404,7 @@
   </div>
 </section>
 
-<section id="valide">
+<section id="valide" class="reveal">
   <div class="conteneur">
     <p class="eyebrow">Validé en conditions réelles</p>
     <h2>au-delà de l'exemple</h2>
@@ -566,11 +412,13 @@
   </div>
 </section>
 
-<section class="alt" id="apropos">
+<section class="alt reveal" id="apropos">
   <div class="conteneur">
     <p class="eyebrow">À propos</p>
     <div class="bio">
-      <div class="bio__init" aria-hidden="true">AB</div>
+      <div class="bio__glyphe" aria-hidden="true">
+        <svg class="glyphe" viewBox="0 0 64 32"><path class="brin" d="M2 16 L18 16"/><path class="suture" d="M18 16 Q26 3 34 16"/><path class="brin" d="M34 16 L60 16"/></svg>
+      </div>
       <div>
         <h2 style="margin-bottom:0.8rem;">un projet né de la pratique</h2>
         <p>Expert en gestion des identités au sein d'une équipe Global IT Operations : sécurité des infrastructures, IAM, PKI, cycle de vie des certificats. Comparatifs de solutions IAM/CLM (Evertrust Horizon, Digital Berry, DigiCert, Venafi). J'enseigne également des modules d'informatique dans le supérieur.</p>
@@ -580,14 +428,33 @@
   </div>
 </section>
 
-<section id="contact">
+<section id="contact" class="reveal">
   <div class="conteneur">
     <p class="eyebrow">Contact</p>
     <h2>une mission, un poste, une question technique</h2>
     <p class="mute">Ce projet est personnel, à usage portfolio et pédagogique — aucune exploitation commerciale actuellement.</p>
-    <div class="contact-ligne">
-      <a href="mailto:contact@identity-ops.com">contact@identity-ops.com</a>
-    </div>
+
+    <form class="contact" id="formulaire-contact" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="COLLE_TA_CLE_WEB3FORMS_ICI" />
+      <input type="hidden" name="subject" value="Nouveau message depuis trustline.identity-ops.com" />
+      <input type="checkbox" name="botcheck" class="honeypot" tabindex="-1" autocomplete="off" />
+
+      <div>
+        <label for="nom">Nom</label>
+        <input type="text" id="nom" name="name" required />
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+      <div>
+        <label for="message">Message</label>
+        <textarea id="message" name="message" required></textarea>
+      </div>
+      <button type="submit" class="bouton bouton--plein" style="justify-self:start;">Envoyer</button>
+      <p class="contact__statut" id="contact-statut" role="status"></p>
+    </form>
+    <p class="mute" style="font-size:0.8rem; margin-top:1rem;">Ou directement par email : <a href="mailto:contact@identity-ops.com" style="border-bottom:1px solid var(--border);">contact@identity-ops.com</a></p>
   </div>
 </section>
 
@@ -600,6 +467,140 @@
     </div>
   </div>
 </footer>
+
+<script>
+(function () {
+  "use strict";
+  var reduitMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Reveal au scroll
+  var elements = document.querySelectorAll(".reveal");
+  if (reduitMotion || !("IntersectionObserver" in window)) {
+    elements.forEach(function (el) { el.classList.add("visible"); });
+  } else {
+    var observateur = new IntersectionObserver(function (entrees) {
+      entrees.forEach(function (entree) {
+        if (entree.isIntersecting) {
+          entree.target.classList.add("visible");
+          observateur.unobserve(entree.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    elements.forEach(function (el) { observateur.observe(el); });
+  }
+
+  // Jauge de score : anime au premier passage en vue
+  var jauge = document.getElementById("jauge");
+  if (jauge) {
+    if (reduitMotion) {
+      jauge.classList.add("visible");
+    } else if ("IntersectionObserver" in window) {
+      var obsJauge = new IntersectionObserver(function (entrees) {
+        entrees.forEach(function (entree) {
+          if (entree.isIntersecting) {
+            entree.target.classList.add("visible");
+            obsJauge.unobserve(entree.target);
+          }
+        });
+      }, { threshold: 0.5 });
+      obsJauge.observe(jauge);
+    } else {
+      jauge.classList.add("visible");
+    }
+  }
+
+  // Reseau ambiant en fond du hero (canvas, discret, en pause si prefers-reduced-motion)
+  var canvas = document.getElementById("reseau");
+  if (canvas && !reduitMotion) {
+    var ctx = canvas.getContext("2d");
+    var hero = canvas.parentElement;
+    var noeuds = [];
+    var NB_NOEUDS = 32;
+    var DISTANCE_LIEN = 130;
+
+    function dimensionner() {
+      canvas.width = hero.offsetWidth;
+      canvas.height = hero.offsetHeight;
+    }
+    function initNoeuds() {
+      noeuds = [];
+      for (var i = 0; i < NB_NOEUDS; i++) {
+        noeuds.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.15,
+          vy: (Math.random() - 0.5) * 0.15
+        });
+      }
+    }
+    function dessiner() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (var i = 0; i < noeuds.length; i++) {
+        var n = noeuds[i];
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0 || n.x > canvas.width) n.vx *= -1;
+        if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
+      }
+      for (var a = 0; a < noeuds.length; a++) {
+        for (var b = a + 1; b < noeuds.length; b++) {
+          var dx = noeuds[a].x - noeuds[b].x, dy = noeuds[a].y - noeuds[b].y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < DISTANCE_LIEN) {
+            ctx.strokeStyle = "rgba(176,141,87," + (0.14 * (1 - dist / DISTANCE_LIEN)) + ")";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(noeuds[a].x, noeuds[a].y);
+            ctx.lineTo(noeuds[b].x, noeuds[b].y);
+            ctx.stroke();
+          }
+        }
+        ctx.fillStyle = "rgba(201,166,113,0.55)";
+        ctx.beginPath();
+        ctx.arc(noeuds[a].x, noeuds[a].y, 1.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(dessiner);
+    }
+    dimensionner();
+    initNoeuds();
+    dessiner();
+    window.addEventListener("resize", function () { dimensionner(); });
+  }
+
+  // Formulaire de contact (Web3Forms), avec repli mailto si la cle n'est pas configuree
+  var formulaire = document.getElementById("formulaire-contact");
+  var statut = document.getElementById("contact-statut");
+  if (formulaire) {
+    formulaire.addEventListener("submit", function (evenement) {
+      var cle = formulaire.querySelector('[name="access_key"]').value;
+      if (!cle || cle === "COLLE_TA_CLE_WEB3FORMS_ICI") {
+        evenement.preventDefault();
+        statut.dataset.etat = "erreur";
+        statut.textContent = "Formulaire pas encore configuré — écris directement à contact@identity-ops.com.";
+        return;
+      }
+      evenement.preventDefault();
+      statut.dataset.etat = "";
+      statut.textContent = "Envoi en cours…";
+      fetch(formulaire.action, { method: "POST", body: new FormData(formulaire), headers: { Accept: "application/json" } })
+        .then(function (reponse) { return reponse.json(); })
+        .then(function (donnees) {
+          if (donnees.success) {
+            statut.dataset.etat = "ok";
+            statut.textContent = "Message envoyé, merci — réponse sous peu.";
+            formulaire.reset();
+          } else {
+            throw new Error("echec");
+          }
+        })
+        .catch(function () {
+          statut.dataset.etat = "erreur";
+          statut.textContent = "Échec de l'envoi — écris directement à contact@identity-ops.com.";
+        });
+    });
+  }
+})();
+</script>
 
 </body>
 </html>
