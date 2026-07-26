@@ -342,7 +342,7 @@ score de maturité clm : 15/100 — <span class="crit">maturité faible</span>
         <ul>
           <li><strong>Collecte passive</strong> — interrogation de crt.sh (Certificate Transparency) et du DNS public. Aucune connexion vers le domaine cible.</li>
           <li><strong>Collecte active</strong> — un handshake TLS réel, à débit plafonné et restreint aux ports de services chiffrés, distingue ce qui est servi de ce qui passe une validation stricte.</li>
-          <li><strong>Collecte réseau local</strong> — la même logique de sondage TLS en lecture seule, appliquée aux hôtes découverts sur un réseau privé (table ARP locale, aucun scan de ports large).</li>
+          <li><strong>Collecte réseau local</strong> — la même logique de sondage TLS en lecture seule, appliquée aux hôtes découverts sur un réseau privé (table ARP locale et découverte mDNS complémentaire, aucun scan de ports large).</li>
           <li><strong>Analyse</strong> — fusion des deux sources, détection des écarts (un certificat servi absent de l'historique CT est le signal le plus parlant), score de maturité pondéré par gravité.</li>
           <li><strong>Garde-fous</strong> — aucune collecte sans autorisation explicite dans une liste blanche, aucun scan de ports large, aucune recherche de vulnérabilité, aucune donnée sensible stockée.</li>
           <li><strong>Format</strong> — JSON comme pivot entre chaque étape ; Python simple, dépendances minimales, aucun framework.</li>
