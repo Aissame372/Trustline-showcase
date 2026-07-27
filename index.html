@@ -79,6 +79,7 @@
   }
 
   a { color: inherit; }
+  code { font-family: var(--font-mono); font-size: 0.88em; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 2px; padding: 0.1em 0.4em; }
   a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, textarea:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 3px;
@@ -208,6 +209,16 @@
   }
   section p.mute { color: var(--muted); }
 
+  /* -------- bande de chiffres (juste sous le hero) -------- */
+  .bande-chiffres {
+    background: var(--bg-alt); border-bottom: 1px solid var(--border); padding: 2.6rem 0;
+  }
+  .bande-chiffres .conteneur--large { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.8rem; }
+  @media (max-width: 780px) { .bande-chiffres .conteneur--large { grid-template-columns: 1fr 1fr; } }
+  .chiffre { text-align: center; }
+  .chiffre__valeur { font-family: var(--font-display); font-size: clamp(1.8rem, 3.4vw, 2.4rem); color: var(--ink); line-height: 1; }
+  .chiffre__label { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 0.5rem; }
+
   /* -------- pipeline -------- */
   .pipeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.6rem; margin-top: 2.5rem; }
   @media (max-width: 780px) { .pipeline { grid-template-columns: 1fr 1fr; } }
@@ -257,6 +268,46 @@
   .chip--info .chip__etiquette { background: var(--muted); }
   .chip p { margin: 0; font-size: 0.88rem; color: var(--muted); }
 
+  /* -------- pourquoi trustline : tableau comparatif -------- */
+  .comparatif { width: 100%; border-collapse: collapse; margin-top: 2.4rem; font-size: 0.92rem; }
+  .comparatif th, .comparatif td { text-align: left; padding: 0.9rem 1.1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .comparatif thead th { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+  .comparatif tbody th { font-family: var(--font-sans); font-size: 0.9rem; font-weight: 400; color: var(--ink); white-space: nowrap; }
+  .comparatif td.non { color: var(--muted); }
+  .comparatif td.oui { color: var(--ink); }
+  .comparatif td.oui::before { content: "✓ "; color: var(--good); }
+  .comparatif .col-trustline { background: color-mix(in srgb, var(--accent) 7%, transparent); border-left: 2px solid var(--accent); border-right: 2px solid var(--accent); }
+  .comparatif thead .col-trustline { border-top: 2px solid var(--accent); }
+  @media (max-width: 700px) { .comparatif { font-size: 0.82rem; } .comparatif th, .comparatif td { padding: 0.7rem 0.6rem; } }
+  .table-scroll { overflow-x: auto; }
+
+  /* -------- apercu dashboard multi-domaines -------- */
+  .dash-apercu { background: var(--charcoal); color: var(--ivoire); color-scheme: dark; border-radius: 6px; padding: 2.2rem; margin-top: 2.4rem; }
+  .dash-apercu__kpis { display: flex; gap: 2.2rem; flex-wrap: wrap; margin-bottom: 1.8rem; padding-bottom: 1.8rem; border-bottom: 1px solid rgba(246,242,234,0.14); }
+  .dash-apercu__kpi { display: flex; flex-direction: column; }
+  .dash-apercu__kpi b { font-family: var(--font-display); font-size: 1.6rem; }
+  .dash-apercu__kpi span { font-size: 0.65rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gris-sombre); margin-top: 0.2rem; }
+  .dash-grille { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
+  @media (max-width: 780px) { .dash-grille { grid-template-columns: 1fr; } }
+  .dash-carte { background: rgba(255,255,255,0.04); border: 1px solid rgba(246,242,234,0.12); border-left: 3px solid var(--muted); border-radius: 3px; padding: 1.1rem 1.2rem; }
+  .dash-carte--good { border-left-color: #6fbf94; }
+  .dash-carte--warning { border-left-color: #e3ab53; }
+  .dash-carte--critical { border-left-color: #e08277; }
+  .dash-carte__entete { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; }
+  .dash-carte__entete h4 { margin: 0; font-family: var(--font-sans); font-size: 0.85rem; font-weight: 400; }
+  .dash-pastille { flex: none; font-size: 0.62rem; letter-spacing: 0.03em; text-transform: uppercase; padding: 0.15rem 0.45rem; border-radius: 2px; color: #1B2430; }
+  .dash-carte--good .dash-pastille { background: #6fbf94; }
+  .dash-carte--warning .dash-pastille { background: #e3ab53; }
+  .dash-carte--critical .dash-pastille { background: #e08277; }
+  .dash-carte__corps { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; margin-top: 0.7rem; }
+  .dash-carte__score { font-family: var(--font-display); font-size: 1.9rem; }
+  .dash-carte__score small { font-size: 0.75rem; color: var(--gris-sombre); }
+  .dash-spark { width: 5.5rem; height: 1.8rem; flex: none; }
+  .dash-spark polyline { fill: none; stroke: var(--laiton-clair); stroke-width: 2; }
+  .dash-spark circle { fill: var(--laiton-clair); }
+  .dash-apercu__note { font-size: 0.78rem; color: var(--gris-sombre); margin: 1.6rem 0 0; }
+  .dash-apercu code { background: rgba(255,255,255,0.08); border-color: rgba(246,242,234,0.18); color: var(--ivoire); }
+
   /* -------- carte rapport exemple -------- */
   .carte-rapport { display: flex; gap: 2rem; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 2rem; margin-top: 2.2rem; }
   @media (max-width: 640px) { .carte-rapport { flex-direction: column; text-align: center; } }
@@ -298,6 +349,11 @@
 
   footer { padding: 3rem 0 4rem; border-top: 1px solid var(--border); }
   footer p { font-size: 0.8rem; color: var(--muted); margin: 0.4rem 0; }
+  .pied { display: flex; justify-content: space-between; gap: 2.5rem; flex-wrap: wrap; }
+  @media (max-width: 640px) { .pied { flex-direction: column; } }
+  .pied__liens { display: flex; gap: 1.4rem; flex-wrap: wrap; list-style: none; margin: 0; padding: 0; }
+  .pied__liens a { text-decoration: none; font-size: 0.78rem; color: var(--muted); }
+  .pied__liens a:hover { color: var(--accent); }
 
   ::selection { background: var(--accent); color: var(--charcoal); }
 </style>
@@ -317,8 +373,9 @@
   </a>
   <ul class="barre__liens">
     <li><a href="#fonctionnement">Comment ça marche</a></li>
-    <li><a href="#rapport">Rapport d'exemple</a></li>
     <li><a href="#score">Score CLM</a></li>
+    <li><a href="#pourquoi">Pourquoi Trustline</a></li>
+    <li><a href="#rapport">Rapport d'exemple</a></li>
     <li><a href="#apropos">À propos</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -343,6 +400,15 @@
     </div>
   </div>
 </header>
+
+<section class="bande-chiffres reveal" aria-label="Trustline en quelques chiffres">
+  <div class="conteneur conteneur--large">
+    <div class="chiffre"><div class="chiffre__valeur">16</div><div class="chiffre__label">Familles de constats</div></div>
+    <div class="chiffre"><div class="chiffre__valeur">3</div><div class="chiffre__label">Formats de rapport</div></div>
+    <div class="chiffre"><div class="chiffre__valeur">0,2 s</div><div class="chiffre__label">Débit minimum entre connexions</div></div>
+    <div class="chiffre"><div class="chiffre__valeur">0</div><div class="chiffre__label">Secret ou page stockés</div></div>
+  </div>
+</section>
 
 <section id="ce-que-fait" class="reveal">
   <div class="conteneur">
@@ -373,6 +439,8 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
           <li><strong>Collecte active</strong> — un handshake TLS réel, à débit plafonné et restreint aux ports de services chiffrés, distingue ce qui est servi de ce qui passe une validation stricte.</li>
           <li><strong>Collecte réseau local</strong> — la même logique de sondage TLS en lecture seule, appliquée aux hôtes découverts sur un réseau privé (table ARP locale et découverte mDNS complémentaire, aucun scan de ports large).</li>
           <li><strong>Analyse</strong> — fusion des deux sources, détection des écarts (un certificat servi absent de l'historique CT est le signal le plus parlant), score de maturité pondéré par gravité.</li>
+          <li><strong>Comparaison entre deux analyses</strong> — <code>tendance.py --diff</code> : certificats et constats apparus ou résolus depuis le rapport précédent, pas seulement le delta de score.</li>
+          <li><strong>Vue multi-domaines</strong> — <code>dashboard.py</code> agrège localement le score et l'historique de tous les domaines déjà analysés en une page HTML unique.</li>
           <li><strong>Garde-fous</strong> — aucune collecte sans autorisation explicite dans une liste blanche, aucun scan de ports large, aucune recherche de vulnérabilité, aucune donnée sensible stockée.</li>
           <li><strong>Format</strong> — JSON comme pivot entre chaque étape ; Python simple, dépendances minimales, aucun framework.</li>
         </ul>
@@ -411,6 +479,103 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
       <div class="chip chip--critique reveal-item" style="--d:0s"><span class="chip__etiquette">Critique</span><p>Certificat expiré, auto-signé, ou absent de l'historique CT connu.</p></div>
       <div class="chip chip--moyen reveal-item" style="--d:0.1s"><span class="chip__etiquette">Moyen</span><p>Expiration proche, absence de CAA, chaîne incomplète.</p></div>
       <div class="chip chip--info reveal-item" style="--d:0.2s"><span class="chip__etiquette">Info</span><p>Certificat wildcard détecté — à surveiller, pas nécessairement à corriger.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pourquoi" class="alt reveal">
+  <div class="conteneur conteneur--large">
+    <p class="eyebrow">Pourquoi Trustline</p>
+    <h2>ce que les scanners ponctuels ne montrent pas</h2>
+    <p class="mute">Un rapport SSL Labs ou une lecture brute de crt.sh donnent une photo instantanée. Trustline ajoute la dimension qui manque le plus souvent : le temps, et l'écart entre ce qui a été émis et ce qui est réellement servi.</p>
+
+    <div class="table-scroll">
+      <table class="comparatif">
+        <thead>
+          <tr><th scope="col"></th><th scope="col">Scan ponctuel classique</th><th scope="col" class="col-trustline">Trustline</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Historique</th>
+            <td class="non">État actuel uniquement</td>
+            <td class="oui col-trustline">Historique complet via Certificate Transparency</td>
+          </tr>
+          <tr>
+            <th scope="row">Écarts passif / actif</th>
+            <td class="non">Non croisés</td>
+            <td class="oui col-trustline">Certificat servi mais absent des logs CT publics — signal de shadow IT</td>
+          </tr>
+          <tr>
+            <th scope="row">Évolution entre deux scans</th>
+            <td class="non">À refaire de mémoire</td>
+            <td class="oui col-trustline">Comparaison structurée (<code>--diff</code>) : apparus, résolus, delta de score</td>
+          </tr>
+          <tr>
+            <th scope="row">Score</th>
+            <td class="non">Grade global ou liste de dates</td>
+            <td class="oui col-trustline">Score de maturité CLM pondéré par gravité, avec conseil par constat</td>
+          </tr>
+          <tr>
+            <th scope="row">Vue multi-domaines</th>
+            <td class="non">Un domaine à la fois</td>
+            <td class="oui col-trustline">Dashboard agrégé, tendance par domaine</td>
+          </tr>
+          <tr>
+            <th scope="row">Garde-fous</th>
+            <td class="non">Variable selon l'outil</td>
+            <td class="oui col-trustline">Autorisation explicite, débit plafonné, zéro secret stocké — natifs, pas en option</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="mute" style="font-size:0.82rem; margin-top:1.2rem;">Comparaison honnête, pas une liste de fonctionnalités marketing : chaque ligne correspond à un choix d'architecture réel, documenté dans le dépôt du projet.</p>
+  </div>
+</section>
+
+<section id="multi-domaines" class="reveal">
+  <div class="conteneur conteneur--large">
+    <p class="eyebrow">Vue d'ensemble</p>
+    <h2>un tableau de bord pour plusieurs domaines</h2>
+    <p class="mute">Chaque domaine suivi alimente le même historique local. Le tableau de bord agrège les scores, la tendance, et signale en un coup d'œil ce qui mérite attention en premier — exemple illustratif, domaines fictifs.</p>
+
+    <div class="dash-apercu">
+      <div class="dash-apercu__kpis">
+        <div class="dash-apercu__kpi"><b>3</b><span>Domaines suivis</span></div>
+        <div class="dash-apercu__kpi"><b>60</b><span>Score moyen</span></div>
+        <div class="dash-apercu__kpi"><b>1</b><span>Bonne maturité</span></div>
+        <div class="dash-apercu__kpi"><b>1</b><span>Moyenne</span></div>
+        <div class="dash-apercu__kpi"><b>1</b><span>Faible</span></div>
+      </div>
+      <div class="dash-grille">
+        <article class="dash-carte dash-carte--critical">
+          <div class="dash-carte__entete"><h4>cabinet-exemple.fr</h4><span class="dash-pastille">faible</span></div>
+          <div class="dash-carte__corps">
+            <span class="dash-carte__score">10<small>/100</small></span>
+            <svg class="dash-spark" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points="4,10 30,14 55,20 78,24 96,26"></polyline><circle cx="96" cy="26" r="2.4"></circle>
+            </svg>
+          </div>
+        </article>
+        <article class="dash-carte dash-carte--warning">
+          <div class="dash-carte__entete"><h4>groupe-exemple.com</h4><span class="dash-pastille">moyenne</span></div>
+          <div class="dash-carte__corps">
+            <span class="dash-carte__score">78<small>/100</small></span>
+            <svg class="dash-spark" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points="4,20 30,17 55,13 78,11 96,9"></polyline><circle cx="96" cy="9" r="2.4"></circle>
+            </svg>
+          </div>
+        </article>
+        <article class="dash-carte dash-carte--good">
+          <div class="dash-carte__entete"><h4>saas-exemple.io</h4><span class="dash-pastille">bonne</span></div>
+          <div class="dash-carte__corps">
+            <span class="dash-carte__score">92<small>/100</small></span>
+            <svg class="dash-spark" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points="4,12 30,11 55,9 78,8 96,7"></polyline><circle cx="96" cy="7" r="2.4"></circle>
+            </svg>
+          </div>
+        </article>
+      </div>
+      <p class="dash-apercu__note">Généré par <code>dashboard.py</code> à partir des rapports d'analyse déjà produits localement — aucune connexion réseau, aucune donnée envoyée nulle part.</p>
     </div>
   </div>
 </section>
@@ -475,9 +640,17 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
 </section>
 
 <footer>
-  <div class="conteneur">
-    <p>Trustline — certificate intelligence.</p>
-    <p>Projet indépendant, sans exploitation commerciale à ce jour. Le rapport d'exemple ci-dessus est entièrement fictif.</p>
+  <div class="conteneur conteneur--large pied">
+    <div>
+      <p>Trustline — certificate intelligence.</p>
+      <p>Projet indépendant, sans exploitation commerciale à ce jour. Le rapport d'exemple ci-dessus est entièrement fictif.</p>
+    </div>
+    <ul class="pied__liens">
+      <li><a href="#pourquoi">Pourquoi Trustline</a></li>
+      <li><a href="#multi-domaines">Dashboard</a></li>
+      <li><a href="#rapport">Rapport d'exemple</a></li>
+      <li><a href="https://github.com/Aissame372/Trustline-showcase">Dépôt du site</a></li>
+    </ul>
   </div>
 </footer>
 
