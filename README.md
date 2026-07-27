@@ -26,9 +26,20 @@ dans un dépôt privé distinct. Ce dépôt-ci est public.
 
 ## Contact
 
-Volontairement pas de formulaire : un lien `mailto:contact@identity-ops.com`
-(routé via Cloudflare Email Routing) et un bouton "copier l'adresse". Zéro
-dépendance externe, zéro donnée collectée.
+Un formulaire structuré (profil, nature du contact, message) compose un
+email côté client (JS pur, `mailto:`) que l'utilisateur relit et envoie
+lui-même depuis son propre client mail — aucun backend, aucune donnée
+transmise ailleurs qu'à `contact@identity-ops.com` (Cloudflare Email
+Routing). Un bouton "copier le message" pallie les navigateurs sans client
+mail par défaut configuré. Un lien `mailto:` simple reste disponible en
+dessous pour un contact rapide sans passer par le formulaire.
+
+Volontairement pas de vocabulaire de "devis"/tarif : le projet est portfolio
+et pédagogique, sans exploitation commerciale (pas de SIRET actuellement) —
+voir `CLAUDE.md` du dépôt principal. Les choix "Nature du contact" couvrent
+poste salarié, mission via une structure tierce (portage/ESN/agence),
+question technique, ou collaboration open source — jamais une prestation
+facturée en direct.
 
 ## Deploiement
 

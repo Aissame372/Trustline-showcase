@@ -356,6 +356,38 @@
   .pied__liens a:hover { color: var(--accent); }
 
   ::selection { background: var(--accent); color: var(--charcoal); }
+
+  /* -------- formulaire de contact structure -------- */
+  .carte-formulaire {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+    padding: 2.2rem 2.4rem; margin-top: 2.2rem; position: relative; overflow: hidden;
+  }
+  .carte-formulaire::before { content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--accent); }
+  .groupe-champ { margin-bottom: 1.6rem; }
+  fieldset.groupe-champ { border: none; padding: 0; }
+  .groupe-champ legend, .label-champ {
+    font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    padding: 0; margin-bottom: 0.6rem; display: block;
+  }
+  .choix { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .choix input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .choix label {
+    cursor: pointer; font-size: 0.84rem; padding: 0.55rem 1rem; border-radius: 2px;
+    border: 1px solid var(--border); background: var(--bg-alt); color: var(--muted);
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+  .choix input:checked + label { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
+  .choix input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .lignes-deux { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  @media (max-width: 640px) { .lignes-deux { grid-template-columns: 1fr; } }
+  .champ input[type="text"], .champ input[type="email"], .champ textarea {
+    width: 100%; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 2px;
+    padding: 0.8rem 0.9rem; font-family: var(--font-sans); font-size: 0.95rem; color: var(--ink);
+  }
+  .champ textarea { min-height: 7rem; resize: vertical; }
+  .formulaire-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.8rem; }
+  .separateur-ou { display: flex; align-items: center; gap: 1rem; margin: 2.6rem 0; color: var(--muted); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .separateur-ou::before, .separateur-ou::after { content: ""; flex: 1; height: 1px; background: var(--border); }
 </style>
 </head>
 <body>
@@ -626,16 +658,73 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
   <div class="conteneur">
     <p class="eyebrow">Contact</p>
     <h2>une mission, un poste, une question technique</h2>
-    <p class="mute">Pas de formulaire ni d'intermédiaire — un email suffit.</p>
+    <p class="mute">Pas de tunnel de vente, pas d'intermédiaire : ce que tu précises ci-dessous compose simplement un email, que tu peux relire et modifier avant de l'envoyer toi-même.</p>
+
+    <form class="carte-formulaire" id="formulaire-contact" novalidate>
+      <fieldset class="groupe-champ">
+        <legend>Vous êtes</legend>
+        <div class="choix">
+          <input type="radio" name="profil" id="profil-entreprise" value="Entreprise / équipe technique" required />
+          <label for="profil-entreprise">Entreprise / équipe technique</label>
+          <input type="radio" name="profil" id="profil-cabinet" value="Cabinet de conseil / ESN" />
+          <label for="profil-cabinet">Cabinet de conseil / ESN</label>
+          <input type="radio" name="profil" id="profil-recruteur" value="Recruteur" />
+          <label for="profil-recruteur">Recruteur</label>
+          <input type="radio" name="profil" id="profil-recherche" value="Chercheur / enseignant" />
+          <label for="profil-recherche">Chercheur / enseignant</label>
+          <input type="radio" name="profil" id="profil-autre" value="Autre" />
+          <label for="profil-autre">Autre</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="groupe-champ">
+        <legend>Nature du contact</legend>
+        <div class="choix">
+          <input type="radio" name="nature" id="nature-poste" value="Poste salarié (CDI/CDD)" required />
+          <label for="nature-poste">Poste salarié (CDI/CDD)</label>
+          <input type="radio" name="nature" id="nature-mission" value="Mission via une structure (portage, ESN, agence)" />
+          <label for="nature-mission">Mission via une structure (portage, ESN, agence)</label>
+          <input type="radio" name="nature" id="nature-technique" value="Question technique sur Trustline" />
+          <label for="nature-technique">Question technique sur Trustline</label>
+          <input type="radio" name="nature" id="nature-collab" value="Collaboration / contribution open source" />
+          <label for="nature-collab">Collaboration / contribution open source</label>
+          <input type="radio" name="nature" id="nature-autre" value="Autre" />
+          <label for="nature-autre">Autre</label>
+        </div>
+      </fieldset>
+
+      <div class="lignes-deux groupe-champ">
+        <div class="champ">
+          <label class="label-champ" for="contact-nom">Nom</label>
+          <input type="text" id="contact-nom" name="nom" required />
+        </div>
+        <div class="champ">
+          <label class="label-champ" for="contact-email">Email</label>
+          <input type="email" id="contact-email" name="email" required />
+        </div>
+      </div>
+
+      <div class="champ groupe-champ">
+        <label class="label-champ" for="contact-message">Message</label>
+        <textarea id="contact-message" name="message" placeholder="Contexte, périmètre, ce que tu cherches..." required></textarea>
+      </div>
+
+      <div class="formulaire-actions">
+        <button type="submit" class="bouton bouton--plein">Ouvrir mon client mail</button>
+        <button type="button" class="bouton-copier" id="bouton-copier-message">Copier le message</button>
+      </div>
+      <p class="contact__statut" id="contact-statut" role="status"></p>
+    </form>
+
+    <div class="separateur-ou">ou directement, en quelques mots</div>
 
     <div class="carte-contact">
       <a class="carte-contact__adresse" href="mailto:contact@identity-ops.com">contact@identity-ops.com</a>
       <div class="carte-contact__actions">
         <button type="button" class="bouton-copier" id="bouton-copier" data-adresse="contact@identity-ops.com">Copier l'adresse</button>
-        <a class="bouton bouton--plein" href="mailto:contact@identity-ops.com">Écrire un email</a>
+        <a class="bouton bouton--vide" href="mailto:contact@identity-ops.com">Écrire un email</a>
       </div>
     </div>
-    <p class="contact__statut" id="contact-statut" role="status"></p>
   </div>
 </section>
 
@@ -834,6 +923,56 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
       hero.addEventListener("mouseleave", function () {
         decalagePointeurX = 0; decalagePointeurY = 0;
         appliquerTransform();
+      });
+    }
+  }
+
+  // Formulaire de contact structure : compose un email (mailto), aucun
+  // backend, aucune donnee envoyee nulle part avant que l'utilisateur
+  // n'appuie lui-meme sur "envoyer" dans son propre client mail.
+  var formulaireContact = document.getElementById("formulaire-contact");
+  if (formulaireContact) {
+    var composerMessage = function () {
+      var profilCoche = formulaireContact.querySelector('[name="profil"]:checked');
+      var natureCochee = formulaireContact.querySelector('[name="nature"]:checked');
+      var nom = formulaireContact.querySelector("#contact-nom").value.trim();
+      var email = formulaireContact.querySelector("#contact-email").value.trim();
+      var message = formulaireContact.querySelector("#contact-message").value.trim();
+      var profil = profilCoche ? profilCoche.value : "(non précisé)";
+      var nature = natureCochee ? natureCochee.value : "(non précisé)";
+
+      var corps = "Profil : " + profil + "\n" +
+        "Nature du contact : " + nature + "\n" +
+        "Nom : " + nom + "\n" +
+        "Email : " + email + "\n\n" +
+        "Message :\n" + message;
+      return { sujet: "Contact via trustline.identity-ops.com — " + nature, corps: corps };
+    };
+
+    formulaireContact.addEventListener("submit", function (evenement) {
+      evenement.preventDefault();
+      if (!formulaireContact.reportValidity()) { return; }
+      var m = composerMessage();
+      var statutFormulaire = document.getElementById("contact-statut");
+      window.location.href = "mailto:contact@identity-ops.com?subject=" + encodeURIComponent(m.sujet) + "&body=" + encodeURIComponent(m.corps);
+      if (statutFormulaire) {
+        statutFormulaire.textContent = "Client mail ouvert avec le message pré-rempli — relis, puis envoie-le toi-même.";
+      }
+    });
+
+    var boutonCopierMessage = document.getElementById("bouton-copier-message");
+    if (boutonCopierMessage) {
+      boutonCopierMessage.addEventListener("click", function () {
+        if (!formulaireContact.reportValidity()) { return; }
+        var m = composerMessage();
+        var statutFormulaire = document.getElementById("contact-statut");
+        var suite = function () { if (statutFormulaire) statutFormulaire.textContent = "Message copié dans le presse-papiers."; };
+        var echec = function () { if (statutFormulaire) statutFormulaire.textContent = "Copie indisponible — utilise \"Ouvrir mon client mail\"."; };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText("Sujet : " + m.sujet + "\n\n" + m.corps).then(suite).catch(echec);
+        } else {
+          echec();
+        }
       });
     }
   }
