@@ -1,0 +1,4 @@
+Contact: mailto:contact@identity-ops.com
+Expires: 2027-07-27T00:00:00.000Z
+Preferred-Languages: fr, en
+Canonical: https://trustline.identity-ops.com/.well-known/security.txt
