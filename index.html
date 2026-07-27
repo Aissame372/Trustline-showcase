@@ -327,6 +327,17 @@
   .dash-apercu__note { font-size: 0.78rem; color: var(--gris-sombre); margin: 1.6rem 0 0; }
   .dash-apercu code { background: rgba(255,255,255,0.08); border-color: rgba(246,242,234,0.18); color: var(--ivoire); }
 
+  /* -------- faq : accordeon, questions en clair (pas des libelles techniques) -------- */
+  .faq-liste { margin-top: 1rem; }
+  .faq-liste details { margin-top: 0; border-top: 1px solid var(--border); padding: 1.3rem 0; }
+  .faq-liste details:first-child { border-top: 1px solid var(--border); }
+  .faq-liste summary {
+    font-family: var(--font-sans); font-size: 0.98rem; letter-spacing: normal; text-transform: none;
+    color: var(--ink); font-weight: 400;
+  }
+  .faq-liste summary:hover { color: var(--accent); }
+  .faq-liste details p { margin: 0.9rem 0 0; color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+
   /* -------- l'offre : disponible aujourd'hui / a venir -------- */
   .offre-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; margin-top: 2.2rem; }
   @media (max-width: 700px) { .offre-grille { grid-template-columns: 1fr; } }
@@ -439,6 +450,7 @@
     <li><a href="#rapport">Le rapport</a></li>
     <li><a href="#offre">L'offre</a></li>
     <li><a href="#apropos">Qui écrit ça</a></li>
+    <li><a href="#faq">FAQ</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
@@ -700,6 +712,39 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
   </div>
 </section>
 
+<section id="faq" class="reveal">
+  <div class="conteneur">
+    <p class="eyebrow">Questions fréquentes</p>
+    <h2>ce qu'on me demande avant de se lancer</h2>
+    <div class="faq-liste">
+      <details>
+        <summary>C'est gratuit ?</summary>
+        <p>L'offre packagée sera payante au lancement (voir la section L'offre plus haut). Pour les scripts eux-mêmes, je n'ai pas encore tranché entre les rendre publics ou les garder liés à l'offre — écris-moi si ça t'intéresse, ça pèsera dans la décision.</p>
+      </details>
+      <details>
+        <summary>Ça scanne des vulnérabilités ?</summary>
+        <p>Non. Trustline ne fait ni scan de ports large, ni recherche de vulnérabilité, ni tentative d'authentification. Il se limite au cycle de vie des certificats TLS : ce qui a été émis, ce qui est réellement servi, et l'écart entre les deux. Ce n'est pas un remplaçant pour un audit de sécurité complet — plutôt un signal qu'on regarde trop rarement.</p>
+      </details>
+      <details>
+        <summary>Mes données sont stockées où ?</summary>
+        <p>Nulle part en dehors de ta propre machine. Aucune clé privée, aucun identifiant, aucun contenu de page n'est jamais conservé — seulement des métadonnées déjà publiques (dates, autorités, noms d'hôtes) telles que les journaux Certificate Transparency les exposent à qui les interroge.</p>
+      </details>
+      <details>
+        <summary>Pourquoi faire confiance à un outil porté par une seule personne ?</summary>
+        <p>Bonne question, et je ne prétends pas le contraire dans la section "Qui écrit ça". Ce que je peux offrir : un code lisible, pas de boîte noire, un usage réel documenté sur mon propre domaine, et une architecture volontairement simple — pas de framework, pas de dépendance obscure à auditer.</p>
+      </details>
+      <details>
+        <summary>Et si vous arrêtez le projet un jour ?</summary>
+        <p>Tes rapports restent des fichiers JSON, PDF et HTML ordinaires, lisibles sans Trustline. Rien de propriétaire, aucun format fermé, aucun compte dont dépendre pour retrouver tes données.</p>
+      </details>
+      <details>
+        <summary>Ça marche derrière Cloudflare ou un autre CDN ?</summary>
+        <p>Oui — c'est même là que la distinction entre "ce qui a été émis" et "ce qui est réellement servi" devient la plus utile : derrière un CDN ou un reverse-proxy, plusieurs certificats peuvent coexister sans que ce soit visible autrement.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
 <section id="contact" class="alt reveal">
   <div class="conteneur">
     <p class="eyebrow">Contact</p>
@@ -787,6 +832,7 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
       <li><a href="#multi-domaines">Dashboard</a></li>
       <li><a href="#rapport">Rapport d'exemple</a></li>
       <li><a href="#offre">L'offre</a></li>
+      <li><a href="#faq">FAQ</a></li>
       <li><a href="https://github.com/Aissame372/Trustline-showcase">Dépôt du site</a></li>
     </ul>
   </div>

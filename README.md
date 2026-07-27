@@ -26,6 +26,9 @@ dans un dépôt privé distinct. Ce dépôt-ci est public.
   figure. Les deux fichiers viennent du même rapport d'analyse : ne pas les
   régénérer séparément si l'un des deux change.
 - `robots.txt`, `sitemap.xml` — indexation basique (une seule page).
+- Une **FAQ** (section `#faq`) répond aux objections courantes avant contact
+  (gratuité, portée réelle de l'outil, stockage des données, continuité si
+  le projet s'arrête, compatibilité CDN/Cloudflare).
 
 ## L'offre
 
@@ -61,6 +64,11 @@ facturée en direct.
 Dépôt public, servi directement depuis sa racine — GitHub Pages ou
 Cloudflare Pages conviennent tous les deux (Cloudflare Pages recommandé pour
 le support natif d'un fichier `_headers`).
+
+Pour mesurer la fréquentation (optionnel) : activer Cloudflare Web Analytics
+en mode "Automatic setup" depuis le dashboard Cloudflare — aucune ligne de
+code à ajouter ici, voir `docs/deploiement-site.md` du dépôt principal pour
+le détail.
 
 ## Cadre
 
