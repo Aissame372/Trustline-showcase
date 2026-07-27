@@ -14,7 +14,7 @@
           observateur.unobserve(entree.target);
         }
       });
-    }, { threshold: 0.15 });
+    }, { threshold: 0.2 });
     elements.forEach(function (el) { observateur.observe(el); });
   }
 
@@ -241,6 +241,32 @@
   };
   window.addEventListener("hashchange", precocherLancement);
   precocherLancement();
+
+  // ---- Menu hamburger mobile ----
+  var navToggle = document.getElementById("nav-toggle");
+  var navLiens = document.getElementById("nav-liens");
+  if (navToggle && navLiens) {
+    navToggle.addEventListener("click", function () {
+      var ouvert = navLiens.classList.toggle("ouverte");
+      navToggle.setAttribute("aria-expanded", ouvert ? "true" : "false");
+      navToggle.setAttribute("aria-label", ouvert ? "Fermer le menu" : "Ouvrir le menu");
+    });
+    // Fermer sur clic d'un lien
+    navLiens.querySelectorAll("a").forEach(function (lien) {
+      lien.addEventListener("click", function () {
+        navLiens.classList.remove("ouverte");
+        navToggle.setAttribute("aria-expanded", "false");
+        navToggle.setAttribute("aria-label", "Ouvrir le menu");
+      });
+    });
+    // Fermer sur clic hors du menu
+    document.addEventListener("click", function (e) {
+      if (!navToggle.contains(e.target) && !navLiens.contains(e.target)) {
+        navLiens.classList.remove("ouverte");
+        navToggle.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
 
   // Contact : copier l'adresse email dans le presse-papiers
   var boutonCopier = document.getElementById("bouton-copier");
