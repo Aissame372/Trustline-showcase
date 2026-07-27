@@ -29,6 +29,18 @@ dans un dépôt privé distinct. Ce dépôt-ci est public.
 - Une **FAQ** (section `#faq`) répond aux objections courantes avant contact
   (gratuité, portée réelle de l'outil, stockage des données, continuité si
   le projet s'arrête, compatibilité CDN/Cloudflare).
+- `_headers` — en-têtes de sécurité (CSP, X-Frame-Options,
+  Cross-Origin-Opener-Policy...), pris en compte par Cloudflare Pages
+  **et** Workers static assets.
+- `.assetsignore` — exclut `.git`, `node_modules`, `.DS_Store`,
+  `wrangler.jsonc` de ce qui est effectivement servi. **Important** :
+  Cloudflare Workers (contrairement à Pages) ne fait pas cette exclusion
+  automatiquement ; ce fichier a été ajouté après avoir constaté que
+  `.git/config` et `.git/HEAD` étaient servis publiquement suite au passage
+  du dépôt en mode Workers (voir `docs/deploiement-site.md` du dépôt
+  principal pour le détail de l'incident).
+- `.well-known/security.txt` — contact pour signalement de vulnérabilité
+  (RFC 9116).
 
 ## L'offre
 
@@ -61,9 +73,9 @@ facturée en direct.
 
 ## Deploiement
 
-Dépôt public, servi directement depuis sa racine — GitHub Pages ou
-Cloudflare Pages conviennent tous les deux (Cloudflare Pages recommandé pour
-le support natif d'un fichier `_headers`).
+Dépôt public, servi directement depuis sa racine. Actuellement en
+production sur **Cloudflare Workers (static assets)** — GitHub Pages et
+Cloudflare Pages restent des alternatives viables si besoin.
 
 Pour mesurer la fréquentation (optionnel) : activer Cloudflare Web Analytics
 en mode "Automatic setup" depuis le dashboard Cloudflare — aucune ligne de
