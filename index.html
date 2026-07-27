@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Trustline — certificate intelligence</title>
-<meta name="description" content="Trustline cartographie le cycle de vie des certificats TLS d'un domaine et produit un score de maturité clair, avec des recommandations concrètes." />
+<title>Trustline — la mémoire de vos certificats TLS</title>
+<meta name="description" content="Trustline reconstitue l'historique complet des certificats TLS d'un domaine et le traduit en un score de maturité clair — écrit et tenu par une seule personne, entre deux audits IAM." />
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHBhdGggZD0iTTMgMTYgTDExIDE2IiBzdHJva2U9IiMxQjI0MzAiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTExIDE2IFExNiA1IDIxIDE2IiBzdHJva2U9IiNCMDhENTciIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+CiAgPHBhdGggZD0iTTIxIDE2IEwyOSAxNiIgc3Ryb2tlPSIjMUIyNDMwIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=" />
 <style>
   :root {
@@ -131,10 +131,10 @@
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
   }
-  .barre__liens { display: flex; gap: 1.6rem; list-style: none; margin: 0; padding: 0; }
-  .barre__liens a { text-decoration: none; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .barre__liens { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; }
+  .barre__liens a { text-decoration: none; font-size: 0.78rem; letter-spacing: 0.06em; color: var(--muted); }
   .barre__liens a:hover { color: var(--accent); }
-  @media (max-width: 640px) { .barre__liens { display: none; } }
+  @media (max-width: 780px) { .barre__liens { display: none; } }
 
   /* -------- hero : toujours sombre, moment cinematique deliberer -------- */
   .hero {
@@ -161,7 +161,7 @@
   .hero__marque { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 3rem; }
   .hero__marque .glyphe--hero { width: 5.5rem; height: 2.75rem; }
   .hero__oeil {
-    font-family: var(--font-sans); font-size: 0.78rem; letter-spacing: 0.24em; text-transform: uppercase;
+    font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em;
     color: var(--laiton-clair); margin: 0 0 1.2rem;
   }
   .hero h1 {
@@ -169,7 +169,7 @@
     font-size: clamp(2rem, 4.6vw, 3.1rem); line-height: 1.22; letter-spacing: 0.005em;
     text-wrap: balance; margin: 0 0 1.6rem; max-width: 34rem;
   }
-  .hero__sous { max-width: 32rem; color: var(--gris-sombre); font-size: 1.05rem; margin: 0 0 2.6rem; }
+  .hero__sous { max-width: 33rem; color: var(--gris-sombre); font-size: 1.05rem; margin: 0 0 2.6rem; }
   .hero__actions { display: flex; gap: 1rem; flex-wrap: wrap; }
 
   .bouton {
@@ -194,38 +194,26 @@
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
     .reveal.visible { opacity: 1; transform: none; }
 
-    /* enfants a cascade (etapes du pipeline, chips de gravite...) : chaque
-       element porte son propre delai via --d, defini en ligne */
+    /* enfants a cascade : chaque element porte son propre delai via --d */
     .reveal-item { opacity: 0; transform: translateY(16px) scale(0.98); filter: blur(3px); transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease; transition-delay: var(--d, 0s); }
     .reveal-item.visible { opacity: 1; transform: none; filter: blur(0); }
   }
 
   section { padding: 5.5rem 0; }
   section.alt { background: var(--bg-alt); }
-  .eyebrow { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin: 0 0 0.8rem; }
+  .eyebrow { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin: 0 0 0.8rem; }
   h2 {
     font-family: var(--font-display); font-weight: 300; font-size: clamp(1.7rem, 3.4vw, 2.3rem);
     letter-spacing: 0.01em; text-wrap: balance; margin: 0 0 1.4rem;
   }
   section p.mute { color: var(--muted); }
 
-  /* -------- bande de chiffres (juste sous le hero) -------- */
-  .bande-chiffres {
-    background: var(--bg-alt); border-bottom: 1px solid var(--border); padding: 2.6rem 0;
+  /* -------- releve de chiffres, en phrase plutot qu'en tableau de bord -------- */
+  .releve {
+    background: var(--bg-alt); border-bottom: 1px solid var(--border); padding: 2.4rem 0;
   }
-  .bande-chiffres .conteneur--large { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.8rem; }
-  @media (max-width: 780px) { .bande-chiffres .conteneur--large { grid-template-columns: 1fr 1fr; } }
-  .chiffre { text-align: center; }
-  .chiffre__valeur { font-family: var(--font-display); font-size: clamp(1.8rem, 3.4vw, 2.4rem); color: var(--ink); line-height: 1; }
-  .chiffre__label { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-top: 0.5rem; }
-
-  /* -------- pipeline -------- */
-  .pipeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.6rem; margin-top: 2.5rem; }
-  @media (max-width: 780px) { .pipeline { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 480px) { .pipeline { grid-template-columns: 1fr; } }
-  .etape__num { font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); letter-spacing: 0.05em; margin-bottom: 0.7rem; }
-  .etape h3 { font-family: var(--font-sans); font-size: 0.95rem; letter-spacing: 0.04em; text-transform: uppercase; margin: 0 0 0.5rem; }
-  .etape p { font-size: 0.92rem; color: var(--muted); margin: 0; }
+  .releve p { margin: 0; font-size: 1.05rem; line-height: 1.9; color: var(--muted); text-align: center; }
+  .releve b { font-family: var(--font-display); font-weight: 500; font-size: 1.3em; color: var(--ink); font-style: normal; }
 
   /* -------- panneau terminal (constats, pour public technique) -------- */
   .terminal {
@@ -250,6 +238,32 @@
   details .contenu-tech li { margin-bottom: 0.5rem; color: var(--muted); font-size: 0.94rem; }
   details .contenu-tech li strong { color: var(--ink); }
 
+  /* -------- moment citation : pause editoriale, plein format sombre -------- */
+  .moment-citation { background: var(--charcoal); color: var(--ivoire); color-scheme: dark; padding: 5.5rem 0; text-align: center; }
+  .moment-citation blockquote {
+    margin: 0 auto; max-width: 38rem; font-family: var(--font-display); font-style: italic; font-weight: 300;
+    font-size: clamp(1.4rem, 3.4vw, 2.2rem); line-height: 1.45; text-wrap: balance; color: var(--ivoire);
+  }
+  .moment-citation blockquote::before, .moment-citation blockquote::after { content: '"'; color: var(--laiton-clair); }
+  .moment-citation figcaption { margin-top: 1.6rem; font-family: var(--font-sans); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--gris-sombre); }
+
+  /* -------- la methode : spread editorial, pas des cartes -------- */
+  .processus { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 2.8rem; border-top: 1px solid var(--border); }
+  .processus__etape { padding: 1.8rem 1.6rem 0 1.6rem; border-left: 1px solid var(--border); }
+  .processus__etape:first-child { border-left: none; padding-left: 0; }
+  @media (max-width: 780px) {
+    .processus { grid-template-columns: 1fr 1fr; }
+    .processus__etape:nth-child(3) { border-left: none; padding-left: 0; }
+  }
+  @media (max-width: 480px) {
+    .processus { grid-template-columns: 1fr; }
+    .processus__etape { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 1.6rem; }
+    .processus__etape:first-child { border-top: none; padding-top: 0; }
+  }
+  .processus__num { font-family: var(--font-display); font-size: 2.5rem; line-height: 1; color: var(--accent); font-weight: 300; }
+  .processus__etape h3 { font-family: var(--font-sans); font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase; margin: 0.9rem 0 0.5rem; }
+  .processus__etape p { font-size: 0.9rem; color: var(--muted); margin: 0; }
+
   /* -------- jauge score -------- */
   .jauge-demo { max-width: 26rem; margin: 2.5rem 0 0; }
   .jauge-demo__chiffre { font-family: var(--font-display); font-size: 3rem; margin-bottom: 0.3rem; }
@@ -259,27 +273,25 @@
   .jauge-remplie.visible { width: 61%; }
   .jauge-legende { display: flex; justify-content: space-between; font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); margin-top: 0.6rem; }
 
-  .grille-gravite { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2.2rem; }
-  @media (max-width: 600px) { .grille-gravite { grid-template-columns: 1fr; } }
-  .chip { border-radius: 3px; padding: 1.1rem 1.2rem; border: 1px solid var(--border); background: var(--surface); }
-  .chip__etiquette { display: inline-block; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 2px; color: #fff; margin-bottom: 0.6rem; }
-  .chip--critique .chip__etiquette { background: var(--critical); }
-  .chip--moyen .chip__etiquette { background: var(--warning); }
-  .chip--info .chip__etiquette { background: var(--muted); }
-  .chip p { margin: 0; font-size: 0.88rem; color: var(--muted); }
+  /* -------- glossaire de gravite : liste typographique, pas des chips -------- */
+  .glossaire-gravite { margin: 2.2rem 0 0; }
+  .glossaire-gravite dt {
+    font-family: var(--font-sans); font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase;
+    font-weight: 500; padding-top: 1.1rem;
+  }
+  .glossaire-gravite dt.critique { color: var(--critical); }
+  .glossaire-gravite dt.moyen { color: var(--warning); }
+  .glossaire-gravite dt.info { color: var(--muted); }
+  .glossaire-gravite dd { margin: 0.35rem 0 0; padding-bottom: 1.1rem; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 0.94rem; }
+  .glossaire-gravite dd:last-of-type { border-bottom: none; }
 
-  /* -------- pourquoi trustline : tableau comparatif -------- */
-  .comparatif { width: 100%; border-collapse: collapse; margin-top: 2.4rem; font-size: 0.92rem; }
-  .comparatif th, .comparatif td { text-align: left; padding: 0.9rem 1.1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
-  .comparatif thead th { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
-  .comparatif tbody th { font-family: var(--font-sans); font-size: 0.9rem; font-weight: 400; color: var(--ink); white-space: nowrap; }
-  .comparatif td.non { color: var(--muted); }
-  .comparatif td.oui { color: var(--ink); }
-  .comparatif td.oui::before { content: "✓ "; color: var(--good); }
-  .comparatif .col-trustline { background: color-mix(in srgb, var(--accent) 7%, transparent); border-left: 2px solid var(--accent); border-right: 2px solid var(--accent); }
-  .comparatif thead .col-trustline { border-top: 2px solid var(--accent); }
-  @media (max-width: 700px) { .comparatif { font-size: 0.82rem; } .comparatif th, .comparatif td { padding: 0.7rem 0.6rem; } }
-  .table-scroll { overflow-x: auto; }
+  /* -------- face aux autres outils : contrastes en prose -------- */
+  .contrastes { margin-top: 2.4rem; display: flex; flex-direction: column; }
+  .contraste { padding: 1.5rem 0; border-bottom: 1px solid var(--border); }
+  .contraste:last-child { border-bottom: none; }
+  .contraste__avant { color: var(--muted); font-size: 0.92rem; margin: 0 0 0.35rem; font-style: italic; }
+  .contraste__apres { font-size: 1.02rem; margin: 0; }
+  .contraste__apres strong { color: var(--accent); font-weight: 500; }
 
   /* -------- apercu dashboard multi-domaines -------- */
   .dash-apercu { background: var(--charcoal); color: var(--ivoire); color-scheme: dark; border-radius: 6px; padding: 2.2rem; margin-top: 2.4rem; }
@@ -289,16 +301,14 @@
   .dash-apercu__kpi span { font-size: 0.65rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gris-sombre); margin-top: 0.2rem; }
   .dash-grille { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.1rem; }
   @media (max-width: 780px) { .dash-grille { grid-template-columns: 1fr; } }
-  .dash-carte { background: rgba(255,255,255,0.04); border: 1px solid rgba(246,242,234,0.12); border-left: 3px solid var(--muted); border-radius: 3px; padding: 1.1rem 1.2rem; }
-  .dash-carte--good { border-left-color: #6fbf94; }
-  .dash-carte--warning { border-left-color: #e3ab53; }
-  .dash-carte--critical { border-left-color: #e08277; }
+  .dash-carte { background: rgba(255,255,255,0.04); border: 1px solid rgba(246,242,234,0.12); border-radius: 3px; padding: 1.1rem 1.2rem; }
   .dash-carte__entete { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; }
   .dash-carte__entete h4 { margin: 0; font-family: var(--font-sans); font-size: 0.85rem; font-weight: 400; }
-  .dash-pastille { flex: none; font-size: 0.62rem; letter-spacing: 0.03em; text-transform: uppercase; padding: 0.15rem 0.45rem; border-radius: 2px; color: #1B2430; }
-  .dash-carte--good .dash-pastille { background: #6fbf94; }
-  .dash-carte--warning .dash-pastille { background: #e3ab53; }
-  .dash-carte--critical .dash-pastille { background: #e08277; }
+  .dash-pastille { flex: none; display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.62rem; letter-spacing: 0.03em; text-transform: uppercase; color: var(--gris-sombre); }
+  .dash-pastille::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .dash-carte--good .dash-pastille { color: #6fbf94; }
+  .dash-carte--warning .dash-pastille { color: #e3ab53; }
+  .dash-carte--critical .dash-pastille { color: #e08277; }
   .dash-carte__corps { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; margin-top: 0.7rem; }
   .dash-carte__score { font-family: var(--font-display); font-size: 1.9rem; }
   .dash-carte__score small { font-size: 0.75rem; color: var(--gris-sombre); }
@@ -321,20 +331,17 @@
   .carte-rapport__texte p { margin: 0.4rem 0 1.2rem; color: var(--muted); font-size: 0.92rem; }
   .carte-rapport__actions { display: flex; gap: 0.9rem; flex-wrap: wrap; }
 
-  /* -------- a propos -------- */
+  /* -------- qui ecrit ca -------- */
   .bio { display: flex; gap: 2.5rem; align-items: flex-start; }
   @media (max-width: 700px) { .bio { flex-direction: column; } }
   .bio__glyphe { flex: none; width: 4.5rem; height: 4.5rem; border-radius: 50%; border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; }
   .bio__glyphe .glyphe { width: 2.2rem; height: 1.1rem; }
 
-  /* -------- contact : carte email, pas de formulaire -------- */
+  /* -------- contact : carte email directe -------- */
   .carte-contact {
     display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
     background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
-    padding: 2.2rem 2.4rem; margin-top: 2.2rem; position: relative; overflow: hidden;
-  }
-  .carte-contact::before {
-    content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--accent);
+    padding: 2rem 2.2rem; margin-top: 2.2rem;
   }
   .carte-contact__adresse { font-family: var(--font-display); font-size: clamp(1.3rem, 3vw, 1.7rem); text-decoration: none; color: var(--ink); border-bottom: 1px solid transparent; transition: border-color 0.2s ease; }
   .carte-contact__adresse:hover { border-color: var(--accent); }
@@ -360,9 +367,8 @@
   /* -------- formulaire de contact structure -------- */
   .carte-formulaire {
     background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
-    padding: 2.2rem 2.4rem; margin-top: 2.2rem; position: relative; overflow: hidden;
+    padding: 2.2rem 2.4rem; margin-top: 2.2rem;
   }
-  .carte-formulaire::before { content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--accent); }
   .groupe-champ { margin-bottom: 1.6rem; }
   fieldset.groupe-champ { border: none; padding: 0; }
   .groupe-champ legend, .label-champ {
@@ -404,11 +410,11 @@
     <span class="marque__mot">trustline</span>
   </a>
   <ul class="barre__liens">
-    <li><a href="#fonctionnement">Comment ça marche</a></li>
-    <li><a href="#score">Score CLM</a></li>
-    <li><a href="#pourquoi">Pourquoi Trustline</a></li>
-    <li><a href="#rapport">Rapport d'exemple</a></li>
-    <li><a href="#apropos">À propos</a></li>
+    <li><a href="#fonctionnement">La méthode</a></li>
+    <li><a href="#score">Le score</a></li>
+    <li><a href="#pourquoi">Face aux autres outils</a></li>
+    <li><a href="#rapport">Le rapport</a></li>
+    <li><a href="#apropos">Qui écrit ça</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
@@ -423,9 +429,9 @@
         <path class="brin" d="M34 16 L60 16"/>
       </svg>
     </div>
-    <p class="hero__oeil">Cartographie du cycle de vie des certificats TLS</p>
+    <p class="hero__oeil">carnet de bord — certificats TLS, en continu</p>
     <h1>la confiance ne se rompt jamais d'un coup —<br />elle s'effiloche, un certificat oublié à la fois</h1>
-    <p class="hero__sous">Trustline reconstitue l'historique complet des certificats d'un domaine — émis, expirés, oubliés, ou jamais autorisés — et le traduit en un score de maturité clair, accompagné de recommandations concrètes.</p>
+    <p class="hero__sous">Je construis Trustline seul, entre deux audits IAM, parce que je n'ai jamais trouvé d'outil qui raconte l'histoire complète d'un certificat plutôt que sa seule date d'expiration. Les journaux publics gardent cette mémoire — je la remets simplement en ordre, avec un score qu'on peut discuter en réunion sans sortir un tableur.</p>
     <div class="hero__actions">
       <a class="bouton bouton--plein" href="#rapport">Voir un rapport d'exemple</a>
       <a class="bouton bouton--vide" href="#contact">Me contacter</a>
@@ -433,12 +439,9 @@
   </div>
 </header>
 
-<section class="bande-chiffres reveal" aria-label="Trustline en quelques chiffres">
+<section class="releve reveal" aria-label="Trustline en quelques chiffres">
   <div class="conteneur conteneur--large">
-    <div class="chiffre"><div class="chiffre__valeur">16</div><div class="chiffre__label">Familles de constats</div></div>
-    <div class="chiffre"><div class="chiffre__valeur">3</div><div class="chiffre__label">Formats de rapport</div></div>
-    <div class="chiffre"><div class="chiffre__valeur">0,2 s</div><div class="chiffre__label">Débit minimum entre connexions</div></div>
-    <div class="chiffre"><div class="chiffre__valeur">0</div><div class="chiffre__label">Secret ou page stockés</div></div>
+    <p>Quelques repères, pas un argumentaire : <b>16</b> familles de constats suivies, <b>3</b> formats de rapport, <b>0,2 seconde</b> minimum entre deux connexions, et <b>zéro</b> secret ou contenu de page jamais conservé.</p>
   </div>
 </section>
 
@@ -481,20 +484,29 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
   </div>
 </section>
 
-<section class="alt reveal" id="fonctionnement">
+<section class="moment-citation reveal" aria-label="Une observation de terrain">
+  <div class="conteneur">
+    <figure style="margin:0;">
+      <blockquote>Le certificat qui expire un dimanche à 3h du matin n'est jamais une surprise. C'est toujours celui que personne ne surveillait.</blockquote>
+      <figcaption>— une observation qui revient à chaque audit, pas une punchline</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="fonctionnement" class="reveal">
   <div class="conteneur conteneur--large">
-    <p class="eyebrow">Comment ça marche</p>
+    <p class="eyebrow">La méthode</p>
     <h2>quatre étapes, une seule source de vérité</h2>
-    <div class="pipeline">
-      <div class="etape reveal-item" style="--d:0s"><div class="etape__num">01</div><h3>Passif</h3><p>Journaux Certificate Transparency et DNS public. Aucune connexion vers la cible.</p></div>
-      <div class="etape reveal-item" style="--d:0.1s"><div class="etape__num">02</div><h3>Actif</h3><p>Handshake TLS réel, à débit plafonné, sur les seuls ports de services chiffrés.</p></div>
-      <div class="etape reveal-item" style="--d:0.2s"><div class="etape__num">03</div><h3>Analyse</h3><p>Fusion des deux sources, détection des écarts, calcul du score de maturité.</p></div>
-      <div class="etape reveal-item" style="--d:0.3s"><div class="etape__num">04</div><h3>Rapport</h3><p>Un document unique, lisible par un board comme par une équipe technique.</p></div>
+    <div class="processus">
+      <div class="etape processus__etape reveal-item" style="--d:0s"><div class="processus__num">01</div><h3>Passif</h3><p>Journaux Certificate Transparency et DNS public. Aucune connexion vers la cible.</p></div>
+      <div class="etape processus__etape reveal-item" style="--d:0.1s"><div class="processus__num">02</div><h3>Actif</h3><p>Handshake TLS réel, à débit plafonné, sur les seuls ports de services chiffrés.</p></div>
+      <div class="etape processus__etape reveal-item" style="--d:0.2s"><div class="processus__num">03</div><h3>Analyse</h3><p>Fusion des deux sources, détection des écarts, calcul du score de maturité.</p></div>
+      <div class="etape processus__etape reveal-item" style="--d:0.3s"><div class="processus__num">04</div><h3>Rapport</h3><p>Un document unique, lisible par un board comme par une équipe technique.</p></div>
     </div>
   </div>
 </section>
 
-<section id="score" class="reveal">
+<section id="score" class="alt reveal">
   <div class="conteneur">
     <p class="eyebrow">Score de maturité CLM</p>
     <h2>un chiffre, trois niveaux de gravité</h2>
@@ -507,64 +519,50 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
       <div class="jauge-legende"><span>0 · faible</span><span>50 · moyenne</span><span>80 · bonne</span></div>
     </div>
 
-    <div class="grille-gravite">
-      <div class="chip chip--critique reveal-item" style="--d:0s"><span class="chip__etiquette">Critique</span><p>Certificat expiré, auto-signé, ou absent de l'historique CT connu.</p></div>
-      <div class="chip chip--moyen reveal-item" style="--d:0.1s"><span class="chip__etiquette">Moyen</span><p>Expiration proche, absence de CAA, chaîne incomplète.</p></div>
-      <div class="chip chip--info reveal-item" style="--d:0.2s"><span class="chip__etiquette">Info</span><p>Certificat wildcard détecté — à surveiller, pas nécessairement à corriger.</p></div>
-    </div>
+    <dl class="glossaire-gravite">
+      <dt class="critique">Critique</dt>
+      <dd>Certificat expiré, auto-signé, ou absent de l'historique CT connu.</dd>
+      <dt class="moyen">Moyen</dt>
+      <dd>Expiration proche, absence de CAA, chaîne incomplète.</dd>
+      <dt class="info">Info</dt>
+      <dd>Certificat wildcard détecté — à surveiller, pas nécessairement à corriger.</dd>
+    </dl>
   </div>
 </section>
 
-<section id="pourquoi" class="alt reveal">
+<section id="pourquoi" class="reveal">
   <div class="conteneur conteneur--large">
-    <p class="eyebrow">Pourquoi Trustline</p>
+    <p class="eyebrow">Face aux autres outils</p>
     <h2>ce que les scanners ponctuels ne montrent pas</h2>
-    <p class="mute">Un rapport SSL Labs ou une lecture brute de crt.sh donnent une photo instantanée. Trustline ajoute la dimension qui manque le plus souvent : le temps, et l'écart entre ce qui a été émis et ce qui est réellement servi.</p>
+    <p class="mute">Un rapport SSL Labs ou une lecture brute de crt.sh donnent une photo instantanée. J'ai voulu ajouter la dimension qui manque le plus souvent : le temps, et l'écart entre ce qui a été émis et ce qui est réellement servi.</p>
 
-    <div class="table-scroll">
-      <table class="comparatif">
-        <thead>
-          <tr><th scope="col"></th><th scope="col">Scan ponctuel classique</th><th scope="col" class="col-trustline">Trustline</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">Historique</th>
-            <td class="non">État actuel uniquement</td>
-            <td class="oui col-trustline">Historique complet via Certificate Transparency</td>
-          </tr>
-          <tr>
-            <th scope="row">Écarts passif / actif</th>
-            <td class="non">Non croisés</td>
-            <td class="oui col-trustline">Certificat servi mais absent des logs CT publics — signal de shadow IT</td>
-          </tr>
-          <tr>
-            <th scope="row">Évolution entre deux scans</th>
-            <td class="non">À refaire de mémoire</td>
-            <td class="oui col-trustline">Comparaison structurée (<code>--diff</code>) : apparus, résolus, delta de score</td>
-          </tr>
-          <tr>
-            <th scope="row">Score</th>
-            <td class="non">Grade global ou liste de dates</td>
-            <td class="oui col-trustline">Score de maturité CLM pondéré par gravité, avec conseil par constat</td>
-          </tr>
-          <tr>
-            <th scope="row">Vue multi-domaines</th>
-            <td class="non">Un domaine à la fois</td>
-            <td class="oui col-trustline">Dashboard agrégé, tendance par domaine</td>
-          </tr>
-          <tr>
-            <th scope="row">Garde-fous</th>
-            <td class="non">Variable selon l'outil</td>
-            <td class="oui col-trustline">Autorisation explicite, débit plafonné, zéro secret stocké — natifs, pas en option</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="contrastes">
+      <div class="contraste">
+        <p class="contraste__avant">Un scan ponctuel montre l'état du jour, rien de plus.</p>
+        <p class="contraste__apres">Trustline montre <strong>l'historique complet</strong> — chaque certificat émis, pas seulement celui qui est en ligne maintenant.</p>
+      </div>
+      <div class="contraste">
+        <p class="contraste__avant">Un scan ponctuel ne compare jamais ce qu'il voit à ce qui a été déclaré ailleurs.</p>
+        <p class="contraste__apres">Trustline <strong>croise passif et actif</strong> : un certificat servi mais absent de tout journal CT public est souvent le signe d'un shadow IT, ou pire.</p>
+      </div>
+      <div class="contraste">
+        <p class="contraste__avant">Relancer un scan la semaine suivante donne un nouveau chiffre, sans dire ce qui a changé.</p>
+        <p class="contraste__apres"><code>tendance.py --diff</code> le dit : certificats apparus, disparus, constats résolus.</p>
+      </div>
+      <div class="contraste">
+        <p class="contraste__avant">La plupart des outils traitent un domaine à la fois.</p>
+        <p class="contraste__apres">Le <strong>tableau de bord</strong> agrège ce qui a déjà été observé, sans repartir de zéro à chaque domaine.</p>
+      </div>
+      <div class="contraste">
+        <p class="contraste__avant">Les garde-fous (autorisation, débit, périmètre) sont souvent une option qu'on active — ou qu'on oublie.</p>
+        <p class="contraste__apres">Ici, ils sont <strong>natifs</strong> : aucune collecte sans autorisation explicite, débit plafonné, zéro secret stocké. Pas un choix d'appoint.</p>
+      </div>
     </div>
-    <p class="mute" style="font-size:0.82rem; margin-top:1.2rem;">Comparaison honnête, pas une liste de fonctionnalités marketing : chaque ligne correspond à un choix d'architecture réel, documenté dans le dépôt du projet.</p>
+    <p class="mute" style="font-size:0.82rem; margin-top:1.6rem;">Une comparaison honnête, pas une liste marketing : chaque ligne correspond à un choix d'architecture réel, documenté dans le dépôt du projet.</p>
   </div>
 </section>
 
-<section id="multi-domaines" class="reveal">
+<section id="multi-domaines" class="alt reveal">
   <div class="conteneur conteneur--large">
     <p class="eyebrow">Vue d'ensemble</p>
     <h2>un tableau de bord pour plusieurs domaines</h2>
@@ -612,7 +610,7 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
   </div>
 </section>
 
-<section class="alt reveal" id="rapport">
+<section class="reveal" id="rapport">
   <div class="conteneur">
     <p class="eyebrow">Rapport d'exemple</p>
     <h2>à quoi ressemble un rapport Trustline</h2>
@@ -630,31 +628,31 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
   </div>
 </section>
 
-<section id="valide" class="reveal">
+<section id="valide" class="alt reveal">
   <div class="conteneur">
     <p class="eyebrow">Validé en conditions réelles</p>
     <h2>au-delà de l'exemple</h2>
-    <p>Trustline est validé en conditions de production réelles — dont sur le domaine <strong>identity-ops.com</strong> — dans le respect strict d'un cadre : aucune collecte sans autorisation explicite consignée dans une liste blanche, débit plafonné entre chaque connexion, aucune donnée sensible stockée.</p>
+    <p>Je fais tourner Trustline pour de vrai, pas seulement en démo — notamment sur <strong>identity-ops.com</strong>, mon propre domaine, avec exactement les mêmes garde-fous que je décris plus haut : aucune collecte sans autorisation explicite consignée dans une liste blanche, débit plafonné entre chaque connexion, aucune donnée sensible stockée.</p>
   </div>
 </section>
 
-<section class="alt reveal" id="apropos">
+<section id="apropos" class="reveal">
   <div class="conteneur">
-    <p class="eyebrow">À propos</p>
+    <p class="eyebrow">Qui écrit ça</p>
     <div class="bio">
       <div class="bio__glyphe" aria-hidden="true">
         <svg class="glyphe" viewBox="0 0 64 32"><path class="brin" d="M2 16 L18 16"/><path class="suture" d="M18 16 Q26 3 34 16"/><path class="brin" d="M34 16 L60 16"/></svg>
       </div>
       <div>
-        <h2 style="margin-bottom:0.8rem;">l'expertise derrière Trustline</h2>
-        <p>Trustline s'appuie sur une expertise concrète en gestion des identités (IAM/PKI) : sécurité des infrastructures, cycle de vie des certificats, comparatifs de solutions IAM/CLM.</p>
-        <p class="mute">Trustline part d'un constat de terrain : la gestion du cycle de vie des certificats reste trop souvent implicite, dispersée entre équipes et prestataires. L'outil rend cette réalité visible et actionnable.</p>
+        <h2 style="margin-bottom:0.8rem;">une personne, pas une équipe</h2>
+        <p>Je viens de la gestion des identités et des accès — PKI, cycle de vie des certificats, comparatifs de solutions IAM/CLM en environnement réel. Trustline est né d'une frustration précise : cette gestion reste presque toujours implicite, éclatée entre équipes et prestataires, jusqu'au jour où un certificat oublié tombe un dimanche.</p>
+        <p class="mute">Je construis l'outil que j'aurais aimé avoir avant ce jour-là.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section id="contact" class="reveal">
+<section id="contact" class="alt reveal">
   <div class="conteneur">
     <p class="eyebrow">Contact</p>
     <h2>une mission, un poste, une question technique</h2>
@@ -731,11 +729,11 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
 <footer>
   <div class="conteneur conteneur--large pied">
     <div>
-      <p>Trustline — certificate intelligence.</p>
-      <p>Projet indépendant, sans exploitation commerciale à ce jour. Le rapport d'exemple ci-dessus est entièrement fictif.</p>
+      <p>Trustline — la mémoire de vos certificats TLS.</p>
+      <p>Projet indépendant, à usage portfolio et pédagogique, sans exploitation commerciale à ce jour. Le rapport d'exemple ci-dessus est entièrement fictif.</p>
     </div>
     <ul class="pied__liens">
-      <li><a href="#pourquoi">Pourquoi Trustline</a></li>
+      <li><a href="#pourquoi">Face aux autres outils</a></li>
       <li><a href="#multi-domaines">Dashboard</a></li>
       <li><a href="#rapport">Rapport d'exemple</a></li>
       <li><a href="https://github.com/Aissame372/Trustline-showcase">Dépôt du site</a></li>

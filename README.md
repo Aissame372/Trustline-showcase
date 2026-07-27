@@ -12,11 +12,13 @@ dans un dépôt privé distinct. Ce dépôt-ci est public.
 
 - `index.html` — le site, entièrement autonome et statique : aucune
   bibliothèque tierce, aucune police/CDN externe, **aucun appel réseau du
-  tout** (le contact se fait par `mailto:`, pas de formulaire). Pensé pour
-  un public technique et non technique, avec un hero animé (canvas en
-  couches : réseau de noeuds, orbes de profondeur, balayage périodique,
-  parallaxe scroll/pointeur) et des révélations en cascade au scroll
-  (`prefers-reduced-motion` respecté partout).
+  tout** (voir section Contact ci-dessous : le formulaire compose un email
+  côté client, il ne l'envoie jamais lui-même). Pensé pour un public
+  technique et non technique, avec un hero animé (canvas en couches :
+  réseau de noeuds, orbes de profondeur, balayage périodique, parallaxe
+  scroll/pointeur), une pause éditoriale en pleine largeur, et des
+  révélations en cascade au scroll (`prefers-reduced-motion` respecté
+  partout).
 - `demo/rapport-demo-cabinet-exemple.pdf` et
   `demo/rapport-demo-cabinet-exemple.html` — le même rapport d'exemple
   généré avec le vrai pipeline Trustline (`report.py`), sur un domaine
