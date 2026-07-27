@@ -566,6 +566,86 @@
     animation: clignote 0.85s step-end infinite;
   }
   @keyframes clignote { 50% { opacity: 0; } }
+
+  /* -------- hero split (texte gauche + carte droite) -------- */
+  .hero__split { display: flex; align-items: center; gap: 3.5rem; }
+  .hero__texte { flex: 1; min-width: 0; }
+  @media (max-width: 960px) { .hero__split { flex-direction: column; } }
+
+  /* -------- carte hero flottante -------- */
+  .hero__carte-outer {
+    flex: none; width: 295px; opacity: 0;
+    animation: hcEntrer 0.9s 1.1s ease-out forwards;
+  }
+  @media (max-width: 960px) { .hero__carte-outer { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .hero__carte-outer { animation: none; opacity: 1; } }
+  @keyframes hcEntrer { to { opacity: 1; } }
+  .hero__carte-inner { animation: hcFloter 7s 2.2s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .hero__carte-inner { animation: none; } }
+  @keyframes hcFloter { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  .hero-carte {
+    background: rgba(20,28,40,0.78);
+    border: 1px solid rgba(176,141,87,0.30);
+    border-radius: 8px; overflow: hidden;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  }
+  .hero-carte__barre {
+    display: flex; align-items: center; gap: 0.35rem;
+    padding: 0.65rem 1rem; background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(176,141,87,0.12);
+    font-family: var(--font-mono); font-size: 0.72rem; color: rgba(246,242,234,0.35);
+  }
+  .hero-carte__point { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.12); flex: none; }
+  .hero-carte__corps { padding: 1.2rem 1.3rem; }
+  .hc-cmd { font-family: var(--font-mono); font-size: 0.73rem; color: var(--laiton-clair); margin-bottom: 1rem; }
+  .hc-score-bloc { margin-bottom: 0.5rem; }
+  .hc-score-lib { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(246,242,234,0.35); margin-bottom: 0.15rem; }
+  .hc-score-val { font-family: var(--font-display); font-size: 2.6rem; line-height: 1; color: #6fbf94; }
+  .hc-score-val sup { font-size: 0.95rem; color: rgba(246,242,234,0.3); font-family: var(--font-sans); font-style: normal; }
+  .hc-barre { height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px; margin: 0.65rem 0 1rem; overflow: hidden; }
+  .hc-barre-fill { height: 100%; width: 0; border-radius: 2px; background: linear-gradient(to right, #6fbf94, #a8d48a); animation: hcBarre 1.4s 1.7s cubic-bezier(0.2,0.8,0.2,1) forwards; }
+  @media (prefers-reduced-motion: reduce) { .hc-barre-fill { animation: none; width: 92%; } }
+  @keyframes hcBarre { to { width: 92%; } }
+  .hc-lignes { display: flex; flex-direction: column; gap: 0.48rem; }
+  .hc-l { font-family: var(--font-mono); font-size: 0.7rem; display: flex; gap: 0.4rem; align-items: flex-start; line-height: 1.4; }
+  .hc-l > span:first-child { flex: none; }
+  .hc-ok { color: rgba(246,242,234,0.58); }
+  .hc-ok > span:first-child { color: #6fbf94; }
+  .hc-w { color: rgba(246,242,234,0.58); }
+  .hc-w > span:first-child { color: #e3ab53; }
+  .hc-pulse {
+    display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+    background: #6fbf94; margin-left: 4px; vertical-align: middle;
+    animation: hcPulse 2s ease-in-out infinite;
+  }
+  @keyframes hcPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.55); } }
+
+  /* -------- jauge SVG circulaire (remplace la barre) -------- */
+  .gauge-wrapper { margin: 2.5rem 0 0; max-width: 280px; }
+  .gauge-svg { width: 100%; overflow: visible; }
+  .gauge-piste-arc { fill: none; stroke: var(--border); stroke-width: 12; stroke-linecap: round; }
+  .gauge-remplie-arc {
+    fill: none; stroke-width: 12; stroke-linecap: round;
+    stroke-dasharray: 251.33; stroke-dashoffset: 251.33;
+    stroke: var(--warning);
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.2,0.8,0.2,1) 0.2s;
+  }
+  .gauge-remplie-arc.visible { stroke-dashoffset: 98; }
+  .gauge-chiffre { font-family: var(--font-display); font-size: 2.5rem; fill: var(--ink); font-weight: 400; }
+  .gauge-niveau { font-family: var(--font-sans); font-size: 0.67rem; fill: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+  .gauge-legende { display: flex; justify-content: space-between; font-size: 0.67rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); margin-top: 0.3rem; }
+
+  /* -------- scroll spy : lien actif -------- */
+  .barre__liens a.actif { color: var(--accent); }
+
+  /* -------- reveal clip-path des titres h2 -------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-titre {
+      clip-path: inset(0 0 110% 0);
+      transition: clip-path 0.85s cubic-bezier(0.2, 0.9, 0.2, 1) 0.12s;
+    }
+    .reveal-titre.visible { clip-path: inset(0 0 -10% 0); }
+  }
 </style>
 <script type="application/ld+json">
 {
@@ -608,7 +688,7 @@
     <li><a href="#apropos">À propos</a></li>
     <li><a href="#faq">FAQ</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="https://github.com/Aissame372/Trustline-showcase" target="_blank" rel="noopener">GitHub ↗</a></li>
+    <li><a href="https://github.com/Aissame372/Trustline-showcase" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
   </ul>
   <button class="nav-toggle" id="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false" type="button">
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
@@ -622,19 +702,50 @@
 <header class="hero" id="haut">
   <canvas id="reseau" aria-hidden="true"></canvas>
   <div class="conteneur hero__contenu">
-    <div class="hero__marque">
-      <svg class="glyphe glyphe--hero anime" viewBox="0 0 64 32" aria-hidden="true">
-        <path class="brin" d="M2 16 L18 16"/>
-        <path class="suture" d="M18 16 Q26 3 34 16"/>
-        <path class="brin" d="M34 16 L60 16"/>
-      </svg>
-    </div>
-    <p class="hero__oeil">Certificate Lifecycle Management — inventaire, score, alertes</p>
-    <h1>Vos certificats TLS ont une histoire.<br />Trustline la reconstitue.</h1>
-    <p class="hero__sous">Inventaire complet depuis les journaux Certificate Transparency, vérification en direct de ce qui est réellement servi, score de maturité CLM exportable — exécution locale, zéro donnée envoyée nulle part, garde-fous natifs.</p>
-    <div class="hero__actions">
-      <a class="bouton bouton--plein" href="#rapport">Voir un rapport d'exemple</a>
-      <a class="bouton bouton--vide" href="https://github.com/Aissame372/Trustline-showcase" target="_blank" rel="noopener">Code source ↗</a>
+    <div class="hero__split">
+      <div class="hero__texte">
+        <div class="hero__marque">
+          <svg class="glyphe glyphe--hero anime" viewBox="0 0 64 32" aria-hidden="true">
+            <path class="brin" d="M2 16 L18 16"/>
+            <path class="suture" d="M18 16 Q26 3 34 16"/>
+            <path class="brin" d="M34 16 L60 16"/>
+          </svg>
+        </div>
+        <p class="hero__oeil">Certificate Lifecycle Management — inventaire, score, alertes</p>
+        <h1>Vos certificats TLS ont une histoire.<br />Trustline la reconstitue.</h1>
+        <p class="hero__sous">Inventaire complet depuis les journaux Certificate Transparency, vérification en direct de ce qui est réellement servi, score de maturité CLM exportable — exécution locale, zéro donnée envoyée nulle part, garde-fous natifs.</p>
+        <div class="hero__actions">
+          <a class="bouton bouton--plein" href="#rapport">Voir un rapport d'exemple</a>
+          <a class="bouton bouton--vide" href="https://github.com/Aissame372/Trustline-showcase" target="_blank" rel="noopener noreferrer">Code source ↗</a>
+        </div>
+      </div>
+      <div class="hero__carte-outer" aria-hidden="true">
+        <div class="hero__carte-inner">
+          <div class="hero-carte">
+            <div class="hero-carte__barre">
+              <span class="hero-carte__point"></span>
+              <span class="hero-carte__point"></span>
+              <span class="hero-carte__point"></span>
+              <span>$ trustline analyze</span>
+            </div>
+            <div class="hero-carte__corps">
+              <div class="hc-cmd">cabinet-exemple.fr</div>
+              <div class="hc-score-bloc">
+                <div class="hc-score-lib">Score CLM</div>
+                <div class="hc-score-val">92<sup>/100</sup></div>
+              </div>
+              <div class="hc-barre"><div class="hc-barre-fill"></div></div>
+              <div class="hc-lignes">
+                <div class="hc-l hc-ok"><span>✓</span><span>47 certificats CT indexés</span></div>
+                <div class="hc-l hc-ok"><span>✓</span><span>Chaîne TLS complète et valide</span></div>
+                <div class="hc-l hc-ok"><span>✓</span><span>DNSSEC actif — zone signée</span></div>
+                <div class="hc-l hc-w"><span>⚠</span><span>Aucun enregistrement CAA</span></div>
+                <div class="hc-l hc-ok"><span>✓</span><span>Auto-renouvellement actif<span class="hc-pulse"></span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </header>
@@ -817,11 +928,17 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
     <h2>un chiffre, trois niveaux de gravité</h2>
     <p class="mute">Chaque constat pèse sur le score selon sa gravité — un certificat expiré ne compte pas comme un certificat wildcard. Le score part de 100 et se lit en trois paliers.</p>
 
-    <div class="jauge-demo">
-      <div class="jauge-demo__chiffre">61<span style="font-size:1.4rem; color:var(--muted);">/100</span></div>
-      <div class="jauge-demo__niveau">maturité moyenne — exemple</div>
-      <div class="jauge-piste"><div class="jauge-remplie" id="jauge"></div></div>
-      <div class="jauge-legende"><span>0 · faible</span><span>50 · moyenne</span><span>80 · bonne</span></div>
+    <div class="gauge-wrapper">
+      <svg class="gauge-svg" viewBox="0 0 200 115"
+           role="img" aria-label="Score de maturité CLM 61 sur 100, maturité moyenne, exemple illustratif">
+        <path class="gauge-piste-arc" d="M 20 100 A 80 80 0 0 1 180 100"/>
+        <path class="gauge-remplie-arc" id="jauge" d="M 20 100 A 80 80 0 0 1 180 100"/>
+        <text x="100" y="80" class="gauge-chiffre" text-anchor="middle">61</text>
+        <text x="100" y="98" class="gauge-niveau" text-anchor="middle">maturité moyenne — exemple</text>
+      </svg>
+      <div class="gauge-legende">
+        <span>0 · faible</span><span>50 · moyenne</span><span>80 · bonne</span>
+      </div>
     </div>
 
     <dl class="glossaire-gravite">
@@ -1014,7 +1131,7 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
         <p>Expert en gestion des identités et des accès — PKI, cycle de vie des certificats, comparatifs de solutions IAM/CLM en environnement réel (Evertrust Horizon, DigiCert, Venafi). Trustline est né d'une frustration précise : la gestion des certificats reste presque toujours implicite et éclatée, jusqu'au jour où l'un d'eux tombe un dimanche.</p>
         <p>Trustline est l'outil que j'aurais aimé avoir avant ce jour-là — construit avec les mêmes garde-fous que ceux qu'on impose à un audit sérieux.</p>
         <p class="mute" style="margin-top:0.9rem; font-size:0.88rem;">
-          <a class="lien-accent" href="https://github.com/Aissame372" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="lien-accent" href="https://github.com/Aissame372" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
           &nbsp;· 
           <a class="lien-muted" href="mailto:contact@identity-ops.com">contact@identity-ops.com</a>
         </p>

@@ -405,5 +405,42 @@
     }, { threshold: 0.2 });
     obsTerminal.observe(termCorps);
   }
+
+  // ── Scroll spy navigation ──────────────────────────────────────────
+  // Met en évidence le lien de navigation correspondant à la section visible.
+  var sectionsNav = document.querySelectorAll('section[id], header[id]');
+  var liensNav = document.querySelectorAll('.barre__liens a[href^="#"]');
+  if (sectionsNav.length && liensNav.length && 'IntersectionObserver' in window) {
+    var obsSpy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var id = entry.target.id;
+          liensNav.forEach(function (lien) {
+            lien.classList.toggle('actif', lien.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-25% 0px -65% 0px', threshold: 0 });
+    sectionsNav.forEach(function (s) { obsSpy.observe(s); });
+  }
+
+  // ── Reveal clip-path sur les titres h2 ──────────────────────────────
+  // Applique dynamiquement la classe reveal-titre à chaque h2 de section
+  // pour l'animation clip-path (aucune modification HTML nécessaire).
+  if ('IntersectionObserver' in window && !reduitMotion) {
+    var titresH2 = document.querySelectorAll('section h2');
+    var obsTitres = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obsTitres.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    titresH2.forEach(function (h) {
+      h.classList.add('reveal-titre');
+      obsTitres.observe(h);
+    });
+  }
 })();
 

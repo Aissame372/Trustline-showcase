@@ -1,5 +1,5 @@
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; form-action 'none'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; form-action mailto:; frame-ancestors 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
@@ -7,3 +7,11 @@
   Permissions-Policy: geolocation=(), microphone=(), camera=()
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
+  Cache-Control: public, max-age=0, must-revalidate
+
+/og-image.svg
+  Cross-Origin-Resource-Policy: cross-origin
+  Cache-Control: public, max-age=86400
+
+/*.js
+  Cache-Control: public, max-age=3600
