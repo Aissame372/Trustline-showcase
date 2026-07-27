@@ -1,0 +1,13 @@
+# Cloudflare Workers (static assets) ne fait PAS l'exclusion automatique de
+# .git/node_modules/.DS_Store que faisait l'ancien Cloudflare Pages : sans ce
+# fichier, wrangler deploie tout le contenu du repo tel quel, y compris .git
+# (decouvert expose publiquement le 27/07/2026 - .git/config, .git/HEAD,
+# .git/logs/HEAD repondaient 200 sur le site en production).
+.git
+.git/**
+.gitignore
+.assetsignore
+node_modules
+node_modules/**
+.DS_Store
+wrangler.jsonc
