@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   "use strict";
   var reduitMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -192,15 +192,15 @@
       var nom = formulaireContact.querySelector("#contact-nom").value.trim();
       var email = formulaireContact.querySelector("#contact-email").value.trim();
       var message = formulaireContact.querySelector("#contact-message").value.trim();
-      var profil = profilCoche ? profilCoche.value : "(non prÃ©cisÃ©)";
-      var nature = natureCochee ? natureCochee.value : "(non prÃ©cisÃ©)";
+      var profil = profilCoche ? profilCoche.value : "(non précisé)";
+      var nature = natureCochee ? natureCochee.value : "(non précisé)";
 
       var corps = "Profil : " + profil + "\n" +
         "Nature du contact : " + nature + "\n" +
         "Nom : " + nom + "\n" +
         "Email : " + email + "\n\n" +
         "Message :\n" + message;
-      return { sujet: "Contact via trustline.identity-ops.com â€” " + nature, corps: corps };
+      return { sujet: "Contact via trustline.identity-ops.com — " + nature, corps: corps };
     };
 
     formulaireContact.addEventListener("submit", function (evenement) {
@@ -210,7 +210,7 @@
       var statutFormulaire = document.getElementById("contact-statut");
       window.location.href = "mailto:contact@identity-ops.com?subject=" + encodeURIComponent(m.sujet) + "&body=" + encodeURIComponent(m.corps);
       if (statutFormulaire) {
-        statutFormulaire.textContent = "Client mail ouvert avec le message prÃ©-rempli â€” relis, puis envoie-le toi-mÃªme.";
+        statutFormulaire.textContent = "Client mail ouvert avec le message pré-rempli — relis, puis envoie-le toi-même.";
       }
     });
 
@@ -220,8 +220,8 @@
         if (!formulaireContact.reportValidity()) { return; }
         var m = composerMessage();
         var statutFormulaire = document.getElementById("contact-statut");
-        var suite = function () { if (statutFormulaire) statutFormulaire.textContent = "Message copiÃ© dans le presse-papiers."; };
-        var echec = function () { if (statutFormulaire) statutFormulaire.textContent = "Copie indisponible â€” utilise \"Ouvrir mon client mail\"."; };
+        var suite = function () { if (statutFormulaire) statutFormulaire.textContent = "Message copié dans le presse-papiers."; };
+        var echec = function () { if (statutFormulaire) statutFormulaire.textContent = "Copie indisponible — utilise \"Ouvrir mon client mail\"."; };
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText("Sujet : " + m.sujet + "\n\n" + m.corps).then(suite).catch(echec);
         } else {
@@ -248,8 +248,8 @@
   if (boutonCopier) {
     boutonCopier.addEventListener("click", function () {
       var adresse = boutonCopier.dataset.adresse;
-      var suite = function () { statutContact.textContent = "Adresse copiÃ©e dans le presse-papiers."; };
-      var echec = function () { statutContact.textContent = "Copie indisponible â€” utilisez le lien mailto ci-contre."; };
+      var suite = function () { statutContact.textContent = "Adresse copiée dans le presse-papiers."; };
+      var echec = function () { statutContact.textContent = "Copie indisponible — utilisez le lien mailto ci-contre."; };
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(adresse).then(suite).catch(echec);
       } else {
