@@ -283,5 +283,59 @@
       }
     });
   }
+
+  // ── Menu hamburger mobile ──────────────────────────────────────────────
+  // Ouvre/ferme le panneau de navigation sur mobile (< 780 px).
+  // - aria-expanded sur le bouton, classe "ouverte" sur la liste
+  // - Fermeture automatique : clic sur un lien, touche Échap, clic hors nav
+  var boutonMenu = document.getElementById("nav-toggle");
+  var liensMenu = document.getElementById("nav-liens");
+  if (boutonMenu && liensMenu) {
+    var fermerMenu = function () {
+      liensMenu.classList.remove("ouverte");
+      boutonMenu.setAttribute("aria-expanded", "false");
+      boutonMenu.setAttribute("aria-label", "Ouvrir le menu");
+    };
+    var ouvrirMenu = function () {
+      liensMenu.classList.add("ouverte");
+      boutonMenu.setAttribute("aria-expanded", "true");
+      boutonMenu.setAttribute("aria-label", "Fermer le menu");
+    };
+
+    boutonMenu.addEventListener("click", function () {
+      if (liensMenu.classList.contains("ouverte")) {
+        fermerMenu();
+      } else {
+        ouvrirMenu();
+      }
+    });
+
+    // Fermer quand on clique sur un lien (navigation vers une ancre)
+    liensMenu.querySelectorAll("a").forEach(function (lien) {
+      lien.addEventListener("click", fermerMenu);
+    });
+
+    // Fermer avec la touche Échap
+    document.addEventListener("keydown", function (e) {
+      if ((e.key === "Escape" || e.key === "Esc") && liensMenu.classList.contains("ouverte")) {
+        fermerMenu();
+        boutonMenu.focus();
+      }
+    });
+
+    // Fermer si on clique en dehors de la nav (overlay implicite)
+    document.addEventListener("click", function (e) {
+      if (liensMenu.classList.contains("ouverte") &&
+          !boutonMenu.contains(e.target) &&
+          !liensMenu.contains(e.target)) {
+        fermerMenu();
+      }
+    });
+
+    // Réinitialiser l'état à > 780 px si on redimensionne la fenêtre
+    window.addEventListener("resize", function () {
+      if (window.innerWidth > 780) { fermerMenu(); }
+    });
+  }
 })();
 
