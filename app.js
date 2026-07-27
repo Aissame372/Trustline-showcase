@@ -337,5 +337,73 @@
       if (window.innerWidth > 780) { fermerMenu(); }
     });
   }
+
+  // ── Compteurs animés ──────────────────────────────────────────────────
+  var statNums = document.querySelectorAll('.stat-num[data-target]');
+  if (statNums.length && 'IntersectionObserver' in window) {
+    var obsStats = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        obsStats.unobserve(entry.target);
+        var el = entry.target;
+        var cible = parseInt(el.dataset.target, 10);
+        if (isNaN(cible) || reduitMotion) { el.textContent = cible; return; }
+        var debut = performance.now();
+        var duree = 1300;
+        (function animer(maintenant) {
+          var elapsed = Math.min(duree, maintenant - debut);
+          var ease = 1 - Math.pow(1 - elapsed / duree, 3);
+          el.textContent = Math.round(cible * ease);
+          if (elapsed < duree) requestAnimationFrame(animer);
+          else el.textContent = cible;
+        })(performance.now());
+      });
+    }, { threshold: 0.5 });
+    statNums.forEach(function (el) { obsStats.observe(el); });
+  }
+
+  // ── Animation pipeline ──────────────────────────────────────────────
+  var pipeline = document.querySelector('.pipeline');
+  if (pipeline && 'IntersectionObserver' in window) {
+    var obsPipeline = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obsPipeline.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    obsPipeline.observe(pipeline);
+  }
+
+  // ── Typewriter terminal ───────────────────────────────────────────────
+  // Tape le contenu du terminal ligne par ligne quand il devient visible.
+  // Chaque ligne est insérée en HTML brut pour préserver les <span> colorés.
+  var termCorps = document.querySelector('.terminal__corps');
+  if (termCorps && !reduitMotion && 'IntersectionObserver' in window) {
+    var contenuOriginal = termCorps.innerHTML;
+    termCorps.innerHTML = '';
+    var lignesTerminal = contenuOriginal.split('\n');
+    var obsTerminal = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        obsTerminal.unobserve(entry.target);
+        var i = 0;
+        var curseur = document.createElement('span');
+        curseur.className = 'typewriter-cursor';
+        curseur.setAttribute('aria-hidden', 'true');
+        entry.target.appendChild(curseur);
+        (function afficher() {
+          if (i >= lignesTerminal.length) { curseur.remove(); return; }
+          var span = document.createElement('span');
+          span.innerHTML = lignesTerminal[i] + (i < lignesTerminal.length - 1 ? '\n' : '');
+          entry.target.insertBefore(span, curseur);
+          i++;
+          setTimeout(afficher, i === 1 ? 200 : 55 + Math.random() * 55);
+        })();
+      });
+    }, { threshold: 0.2 });
+    obsTerminal.observe(termCorps);
+  }
 })();
 
