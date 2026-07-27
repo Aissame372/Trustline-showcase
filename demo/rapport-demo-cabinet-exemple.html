@@ -3,10 +3,466 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Trustline — rapport cabinet-exemple.fr</title>
+<title>Trustline — Rapport cabinet-exemple.fr · Score 10/100</title>
+<meta name="description" content="Rapport d'analyse Trustline pour cabinet-exemple.fr : 3 constats critiques, score de maturité CLM 10/100." />
 <style>
   :root {
     --ivoire:#F6F2EA; --charcoal:#1B2430; --laiton:#B08D57; --laiton-clair:#C9A671;
+    --gris:#9A9488; --gris-sombre:#8E9AA8;
+    --bg:var(--ivoire); --bg-alt:#EDE7DA; --ink:var(--charcoal); --muted:var(--gris);
+    --accent:var(--laiton); --surface:#FFFFFF; --border:rgba(27,36,48,0.14);
+    --critical:#a8382f; --warning:#b3791e; --good:#2f6f4e;
+    --font-display:'Cormorant',Garamond,'Apple Garamond',Georgia,serif;
+    --font-sans:'Jost',Futura,'Century Gothic',Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,'SF Mono','Cascadia Mono','Roboto Mono',Menlo,Consolas,monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark) {
+    :root:where(:not([data-theme="light"])) {
+      --bg:var(--charcoal); --bg-alt:#222E3D; --ink:var(--ivoire); --muted:var(--gris-sombre);
+      --accent:var(--laiton-clair); --surface:#23303F; --border:rgba(246,242,234,0.16);
+      --critical:#e08277; --warning:#e3ab53; --good:#6fbf94; color-scheme:dark;
+    }
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-weight:300;line-height:1.65;-webkit-font-smoothing:antialiased;}
+  h1,h2{font-family:var(--font-display);font-weight:300;}
+  .conteneur{max-width:52rem;margin:0 auto;padding:0 1.5rem;}
+  code{font-family:var(--font-mono);font-size:0.88em;background:var(--bg-alt);border:1px solid var(--border);border-radius:2px;padding:.1em .4em;}
+
+  /* nav */
+  nav.barre{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:.85rem 1.5rem;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);}
+  .marque{display:flex;align-items:center;gap:.5rem;font-family:var(--font-display);font-size:1rem;text-decoration:none;color:var(--ink);}
+  .glyphe{display:block;overflow:visible;width:1.2rem;height:.6rem;}
+  .glyphe path{fill:none;stroke-linecap:round;}
+  .glyphe .brin{stroke:var(--ink);stroke-width:3.5;}
+  .glyphe .suture{stroke:var(--accent);stroke-width:3.5;}
+  .barre-droite{display:flex;align-items:center;gap:1rem;}
+  .barre-domaine{font-size:0.78rem;color:var(--muted);font-family:var(--font-mono);}
+  .lien-retour{font-size:0.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:2px;padding:.35rem .8rem;transition:border-color .2s,color .2s;}
+  .lien-retour:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* hero (dark) */
+  header.hero{background:var(--charcoal);color:var(--ivoire);color-scheme:dark;padding:3.5rem 1.5rem 3rem;display:flex;gap:2.5rem;align-items:center;flex-wrap:wrap;}
+  .hero-gauge{flex:none;}
+  .gauge{width:10rem;height:10rem;}
+  @media(max-width:640px){.gauge{width:7.5rem;height:7.5rem;}}
+  .gauge-piste{fill:none;stroke:rgba(246,242,234,0.12);stroke-width:12;}
+  .gauge-remplie{fill:none;stroke-width:12;stroke-linecap:round;transform:rotate(-90deg);transform-origin:100px 100px;transition:stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1);}
+  .gauge-remplie--good{stroke:#6fbf94;}.gauge-remplie--warning{stroke:#e3ab53;}.gauge-remplie--critical{stroke:#e08277;}
+  .gauge-chiffre{font-family:var(--font-display);font-size:2.4rem;fill:var(--ivoire);}
+  .gauge-sur100{font-size:0.78rem;fill:var(--gris-sombre);}
+  .hero-texte{flex:1;min-width:min(14rem,100%);}
+  .hero .eyebrow{color:var(--laiton-clair);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;margin:0 0 .4rem;}
+  h1{font-size:clamp(1.6rem,4vw,2.2rem);margin:.2rem 0 .3rem;}
+  .hero-niveau{font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;margin:0 0 1.4rem;}
+  .hero-niveau--good{color:#6fbf94;}.hero-niveau--warning{color:#e3ab53;}.hero-niveau--critical{color:#e08277;}
+  .kpi-ligne{display:flex;gap:1.4rem;flex-wrap:wrap;}
+  .kpi{display:flex;flex-direction:column;}
+  .kpi-valeur{font-family:var(--font-display);font-size:1.6rem;line-height:1;}
+  .kpi-valeur--crit{color:#e08277;}.kpi-valeur--warn{color:#e3ab53;}
+  .kpi-label{font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gris-sombre);margin-top:.15rem;}
+
+  /* sections */
+  .eyebrow{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 .5rem;}
+  .section{padding:2.8rem 0;border-bottom:1px solid var(--border);}
+  .section:last-child{border-bottom:none;}
+  .mute{color:var(--muted);}
+  h2{font-size:clamp(1.4rem,3vw,1.9rem);margin:.2rem 0 1rem;}
+
+  /* score history sparkline */
+  .historique-wrapper{margin:1.8rem 0 0;}
+  .historique-svg{width:100%;height:6rem;overflow:visible;}
+  .historique-piste{fill:none;stroke:var(--border);stroke-width:1;}
+  .historique-ligne{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;}
+  .historique-aire{fill:url(#degrade-histo);opacity:.18;}
+  .historique-point{fill:var(--accent);}
+  .historique-label{font-family:var(--font-mono);font-size:.65rem;fill:var(--muted);}
+  .historique-score{font-family:var(--font-display);font-size:1rem;fill:var(--ink);}
+  .historique-legende{display:flex;justify-content:space-between;font-size:.68rem;letter-spacing:.04em;color:var(--muted);margin-top:.3rem;}
+
+  /* filtres & constats */
+  .filtres{display:flex;gap:.5rem;margin:1rem 0 1.4rem;flex-wrap:wrap;}
+  .filtre{font-family:inherit;font-size:.76rem;letter-spacing:.04em;padding:.4rem .85rem;border-radius:2px;border:1px solid var(--border);background:var(--surface);color:var(--ink);cursor:pointer;transition:border-color .15s,color .15s;}
+  .filtre--actif{border-color:var(--accent);color:var(--accent);}
+  .constats-liste{display:flex;flex-direction:column;}
+  .constat{display:flex;gap:.85rem;padding:1.1rem 0;border-top:1px solid var(--border);}
+  .constat:first-child{border-top:none;}
+  .constat-badge{flex:none;font-size:.62rem;letter-spacing:.06em;font-weight:500;text-transform:uppercase;padding:.2rem .55rem;border-radius:2px;height:fit-content;margin-top:.1rem;}
+  .constat-badge--critique{background:color-mix(in srgb,var(--critical) 12%,var(--surface));color:var(--critical);}
+  .constat-badge--moyen{background:color-mix(in srgb,var(--warning) 14%,var(--surface));color:var(--warning);}
+  .constat-badge--info{background:var(--bg-alt);color:var(--muted);}
+  .constat-corps strong{font-size:.9rem;font-weight:500;}
+  .constat-cible{font-size:.78rem;color:var(--muted);font-family:var(--font-mono);margin-left:.5rem;}
+  .constat-corps p{margin:.4rem 0 0;font-size:.87rem;color:var(--muted);line-height:1.55;}
+  .constat-conseil{color:var(--ink);font-style:italic;}
+
+  /* chronologie */
+  .chronologie{margin-top:1.6rem;position:relative;}
+  .chrono-ligne{display:grid;grid-template-columns:min(10rem,38%) 1fr;align-items:center;gap:.8rem;margin-bottom:.6rem;}
+  .chrono-label{font-size:.78rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--font-mono);}
+  .chrono-piste{position:relative;height:.9rem;background:var(--bg-alt);border-radius:2px;}
+  .chrono-barre{position:absolute;top:0;height:100%;border-radius:2px;}
+  .chrono-barre--actif{background:var(--good);}
+  .chrono-barre--expire{background:var(--muted);}
+  .chrono-barre--wildcard{background:var(--accent);}
+  .chrono-aujourdhui{position:absolute;top:-.4rem;bottom:0;border-left:1.5px dashed var(--accent);z-index:1;}
+  .chrono-aujourdhui span{position:absolute;top:-1.2rem;left:.3rem;font-size:.62rem;color:var(--accent);white-space:nowrap;}
+  .chrono-legende{display:flex;gap:1.4rem;margin-top:.8rem;flex-wrap:wrap;}
+  .chrono-legende-item{display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:var(--muted);}
+  .chrono-legende-dot{width:10px;height:10px;border-radius:2px;flex:none;}
+
+  /* tables */
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  table{width:100%;border-collapse:collapse;margin-top:.8rem;font-size:.82rem;}
+  th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--border);}
+  th{color:var(--muted);font-weight:400;text-transform:uppercase;font-size:.66rem;letter-spacing:.06em;}
+  tr:last-child td{border-bottom:none;}
+  .score-zone{font-family:var(--font-display);font-size:1rem;}
+  .score-zone--good{color:var(--good);}.score-zone--warning{color:var(--warning);}.score-zone--critical{color:var(--critical);}
+  .badge-wildcard{font-size:.65rem;background:color-mix(in srgb,var(--accent) 14%,var(--surface));color:var(--accent);padding:.1rem .4rem;border-radius:2px;}
+
+  /* details / annexes */
+  details{margin-top:1rem;border-top:1px solid var(--border);padding-top:1rem;}
+  details+details{margin-top:.6rem;}
+  summary{cursor:pointer;font-size:.82rem;letter-spacing:.05em;color:var(--accent);list-style:none;padding:.2rem 0;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"+ ";}
+  details[open] summary::before{content:"– ";}
+
+  /* footer */
+  footer{padding:2.5rem 1.5rem 3rem;text-align:center;border-top:1px solid var(--border);}
+  footer p{font-size:.74rem;color:var(--muted);margin:.3rem 0;}
+  footer a{color:var(--accent);text-decoration:none;}
+  footer a:hover{text-decoration:underline;}
+
+  /* reveal animation */
+  @media(prefers-reduced-motion:no-preference){
+    .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="barre">
+  <a class="marque" href="https://trustline.identity-ops.com/">
+    <svg class="glyphe" viewBox="0 0 64 32" aria-hidden="true">
+      <path class="brin" d="M2 16 L18 16"/><path class="suture" d="M18 16 Q26 3 34 16"/><path class="brin" d="M34 16 L60 16"/>
+    </svg>
+    trustline
+  </a>
+  <div class="barre-droite">
+    <span class="barre-domaine">cabinet-exemple.fr</span>
+    <a class="lien-retour" href="https://trustline.identity-ops.com/">← Site</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-gauge">
+    <svg class="gauge" viewBox="0 0 200 200" role="img" aria-label="Score 10 sur 100, maturité faible">
+      <circle class="gauge-piste" cx="100" cy="100" r="85"/>
+      <circle class="gauge-remplie gauge-remplie--critical" cx="100" cy="100" r="85"
+        stroke-dasharray="534.1" stroke-dashoffset="534.1"
+        data-dashoffset-final="480.7"/>
+      <text x="100" y="94" class="gauge-chiffre" text-anchor="middle">10</text>
+      <text x="100" y="118" class="gauge-sur100" text-anchor="middle">/ 100</text>
+    </svg>
+  </div>
+  <div class="hero-texte">
+    <p class="eyebrow">Rapport Trustline · 2026-07-20T09:15:00</p>
+    <h1>cabinet-exemple.fr</h1>
+    <p class="hero-niveau hero-niveau--critical">maturité faible — action immédiate requise</p>
+    <div class="kpi-ligne">
+      <div class="kpi"><span class="kpi-valeur">5</span><span class="kpi-label">Certificats CT</span></div>
+      <div class="kpi"><span class="kpi-valeur">3</span><span class="kpi-label">Sous-domaines</span></div>
+      <div class="kpi"><span class="kpi-valeur kpi-valeur--crit">3</span><span class="kpi-label">Critiques</span></div>
+      <div class="kpi"><span class="kpi-valeur kpi-valeur--warn">2</span><span class="kpi-label">Moyens</span></div>
+      <div class="kpi"><span class="kpi-valeur">2</span><span class="kpi-label">Info</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="conteneur">
+
+  <section class="section reveal">
+    <p class="eyebrow">Résumé exécutif</p>
+    <h2>synthèse</h2>
+    <p>La gestion des certificats TLS de <strong>cabinet-exemple.fr</strong> présente des lacunes importantes à corriger rapidement. Le score de <strong>10/100</strong> est tiré vers le bas par un certificat auto-signé en production sur le sous-domaine <code>extranet</code>, absent de tout journal Certificate Transparency connu — signal d'une émission hors processus. Un second certificat expire dans 17 jours sans qu'un renouvellement automatique ne soit visible dans l'historique CT.</p>
+    <p class="mute" style="margin-top:.8rem;font-size:.9rem;">Ce rapport combine des sources publiques (Certificate Transparency, DNS public) et une vérification en direct des certificats servis. Aucune donnée sensible n'a été collectée. Les domaines fictifs sont fournis à titre illustratif uniquement.</p>
+  </section>
+
+  <section class="section reveal">
+    <p class="eyebrow">Score de maturité CLM</p>
+    <h2>historique</h2>
+    <p class="mute" style="font-size:.88rem;">Quatre analyses successives sur ce domaine — la tendance est à la dégradation.</p>
+    <div class="historique-wrapper">
+      <svg class="historique-svg" viewBox="0 0 520 90" preserveAspectRatio="none" role="img" aria-label="Historique du score : 85, 72, 45, 10">
+        <defs>
+          <linearGradient id="degrade-histo" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--accent)" stop-opacity=".4"/>
+            <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <!-- Axes de référence -->
+        <line x1="40" y1="5" x2="40" y2="72" stroke="var(--border)" stroke-width="1"/>
+        <line x1="40" y1="72" x2="510" y2="72" stroke="var(--border)" stroke-width="1"/>
+        <!-- Repère 50 et 80 -->
+        <line x1="40" y1="27" x2="510" y2="27" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="40" y1="49" x2="510" y2="49" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="2" y="30" class="historique-label">80</text>
+        <text x="2" y="52" class="historique-label">50</text>
+        <text x="2" y="75" class="historique-label">0</text>
+        <!-- Données : scores 85, 72, 45, 10 → y = 72 - score*0.67 -->
+        <!-- 85→y=15  72→y=24  45→y=42  10→y=65 -->
+        <polygon class="historique-aire" points="100,15 240,24 380,42 510,65 510,72 380,72 240,72 100,72"/>
+        <polyline class="historique-ligne" points="100,15 240,24 380,42 510,65"/>
+        <circle class="historique-point" cx="100" cy="15" r="4"/>
+        <circle class="historique-point" cx="240" cy="24" r="4"/>
+        <circle class="historique-point" cx="380" cy="42" r="4"/>
+        <circle class="historique-point" cx="510" cy="65" r="5"/>
+        <text x="90" y="11" class="historique-score" text-anchor="middle">85</text>
+        <text x="230" y="20" class="historique-score" text-anchor="middle">72</text>
+        <text x="370" y="38" class="historique-score" text-anchor="middle">45</text>
+        <text x="500" y="61" class="historique-score" text-anchor="middle" style="fill:var(--critical);">10</text>
+        <!-- Dates -->
+        <text x="100" y="84" class="historique-label" text-anchor="middle">2026-04-10</text>
+        <text x="240" y="84" class="historique-label" text-anchor="middle">2026-05-22</text>
+        <text x="380" y="84" class="historique-label" text-anchor="middle">2026-06-30</text>
+        <text x="510" y="84" class="historique-label" text-anchor="middle" style="fill:var(--critical);">2026-07-20</text>
+      </svg>
+    </div>
+    <div class="historique-legende">
+      <span>Régression de −75 pts depuis la première analyse</span>
+      <span style="color:var(--critical);">Tendance critique</span>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <p class="eyebrow">Constats (7)</p>
+    <h2>détail par gravité</h2>
+    <div class="filtres" role="group" aria-label="Filtrer par gravité">
+      <button class="filtre filtre--actif" data-filtre="tous">Tous (7)</button>
+      <button class="filtre" data-filtre="critique">Critiques (3)</button>
+      <button class="filtre" data-filtre="moyen">Moyens (2)</button>
+      <button class="filtre" data-filtre="info">Info (2)</button>
+    </div>
+    <div class="constats-liste">
+      <div class="constat constat--critique" data-gravite="critique">
+        <span class="constat-badge constat-badge--critique">Critique</span>
+        <div class="constat-corps">
+          <strong>Certificat proche de l'expiration (&lt; 30 jours)</strong>
+          <span class="constat-cible">www.cabinet-exemple.fr</span>
+          <p>Expire dans 17 jour(s) — 2026-08-06T14:30:00. Sectigo, valide depuis 2025-08-10.</p>
+          <p class="constat-conseil">Conseil : Renouveler ce certificat immédiatement, ou vérifier qu'un renouvellement automatique est bien configuré.</p>
+        </div>
+      </div>
+      <div class="constat constat--critique" data-gravite="critique">
+        <span class="constat-badge constat-badge--critique">Critique</span>
+        <div class="constat-corps">
+          <strong>Certificat auto-signé</strong>
+          <span class="constat-cible">extranet.cabinet-exemple.fr</span>
+          <p>Certificat auto-signé détecté lors du handshake TLS sur le port 443. La validation stricte échoue côté client.</p>
+          <p class="constat-conseil">Conseil : Remplacer par un certificat émis par une autorité de confiance publique ou interne reconnue par les clients.</p>
+        </div>
+      </div>
+      <div class="constat constat--critique" data-gravite="critique">
+        <span class="constat-badge constat-badge--critique">Critique</span>
+        <div class="constat-corps">
+          <strong>Certificat absent de l'historique CT</strong>
+          <span class="constat-cible">extranet.cabinet-exemple.fr</span>
+          <p>Le certificat servi sur ce sous-domaine n'apparaît dans aucun journal Certificate Transparency connu — signe possible d'une émission hors processus ou d'une usurpation.</p>
+          <p class="constat-conseil">Conseil : Investiguer en priorité. Un certificat non journalisé ne peut pas être audité rétrospectivement.</p>
+        </div>
+      </div>
+      <div class="constat constat--moyen" data-gravite="moyen">
+        <span class="constat-badge constat-badge--moyen">Moyen</span>
+        <div class="constat-corps">
+          <strong>Absence d'enregistrement CAA</strong>
+          <p>Aucun enregistrement DNS CAA — n'importe quelle autorité de certification publique peut émettre pour ce domaine sans restriction.</p>
+          <p class="constat-conseil">Conseil : Ajouter un enregistrement CAA pour restreindre les autorités autorisées (ex : <code>0 issue "letsencrypt.org"</code>).</p>
+        </div>
+      </div>
+      <div class="constat constat--moyen" data-gravite="moyen">
+        <span class="constat-badge constat-badge--moyen">Moyen</span>
+        <div class="constat-corps">
+          <strong>Dispersion d'autorités de certification</strong>
+          <p>3 autorités différentes ont émis des certificats pour ce domaine (Sectigo, Let's Encrypt, DigiCert) — gouvernance complexe à maintenir.</p>
+          <p class="constat-conseil">Conseil : Documenter et limiter le nombre d'autorités utilisées. Idéalement une seule AC pour simplifier le suivi.</p>
+        </div>
+      </div>
+      <div class="constat constat--info" data-gravite="info">
+        <span class="constat-badge constat-badge--info">Info</span>
+        <div class="constat-corps">
+          <strong>Certificat wildcard détecté</strong>
+          <span class="constat-cible">*.cabinet-exemple.fr</span>
+          <p>Périmètre de confiance élargi à tous les sous-domaines. Un certificat par sous-domaine limiterait l'impact d'une compromission de clé.</p>
+        </div>
+      </div>
+      <div class="constat constat--info" data-gravite="info">
+        <span class="constat-badge constat-badge--info">Info</span>
+        <div class="constat-corps">
+          <strong>DNSSEC absent</strong>
+          <p>Aucun enregistrement DNSKEY publié — la zone n'est pas signée. Risque de cache poisoning et de détournement DNS.</p>
+          <p class="constat-conseil">Conseil : Envisager DNSSEC si le registrar et le prestataire DNS le permettent.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <p class="eyebrow">Chronologie</p>
+    <h2>validité des certificats connus</h2>
+    <p class="mute" style="font-size:.85rem;">Période couverte : 2025-08-10 → 2026-09-13. Trait pointillé = aujourd'hui.</p>
+    <div class="chronologie" style="position:relative;">
+      <div class="chrono-aujourdhui" style="left:88%;"><span>aujourd'hui</span></div>
+      <div class="chrono-ligne">
+        <span class="chrono-label">www.cabinet-exemple.fr</span>
+        <div class="chrono-piste">
+          <div class="chrono-barre chrono-barre--actif" style="left:0%;width:91%" title="Sectigo — 2025-08-10 → 2026-08-06"></div>
+        </div>
+      </div>
+      <div class="chrono-ligne">
+        <span class="chrono-label">cabinet-exemple.fr</span>
+        <div class="chrono-piste">
+          <div class="chrono-barre chrono-barre--actif" style="left:73%;width:23%" title="Let's Encrypt — 2026-05-28 → 2026-08-26"></div>
+        </div>
+      </div>
+      <div class="chrono-ligne">
+        <span class="chrono-label">*.cabinet-exemple.fr</span>
+        <div class="chrono-piste">
+          <div class="chrono-barre chrono-barre--wildcard" style="left:77%;width:23%" title="Let's Encrypt — 2026-06-15 → 2026-09-13"></div>
+        </div>
+      </div>
+      <div class="chrono-ligne">
+        <span class="chrono-label">cabinet-exemple.fr</span>
+        <div class="chrono-piste">
+          <div class="chrono-barre chrono-barre--expire" style="left:0%;width:62%" title="DigiCert — 2025-08-10 → 2026-02-28 (expiré)"></div>
+        </div>
+      </div>
+    </div>
+    <div class="chrono-legende">
+      <div class="chrono-legende-item"><div class="chrono-legende-dot" style="background:var(--good)"></div>Valide</div>
+      <div class="chrono-legende-item"><div class="chrono-legende-dot" style="background:var(--accent)"></div>Wildcard</div>
+      <div class="chrono-legende-item"><div class="chrono-legende-dot" style="background:var(--muted)"></div>Expiré</div>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <p class="eyebrow">Vue d'ensemble</p>
+    <h2>autres domaines suivis</h2>
+    <p class="mute" style="font-size:.88rem;">2 autres domaines sont déjà suivis localement — pour une vue agrégée, lancer <code>python dashboard.py</code>.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Domaine</th><th>Score</th><th>Niveau</th><th>Dernière analyse</th></tr></thead>
+        <tbody>
+          <tr><td>groupe-exemple.com</td><td class="score-zone score-zone--warning">78/100</td><td>maturité moyenne</td><td>2026-07-22</td></tr>
+          <tr><td>saas-exemple.io</td><td class="score-zone score-zone--good">92/100</td><td>bonne maturité</td><td>2026-07-24</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <p class="eyebrow">Annexes techniques</p>
+    <h2>sources et données brutes</h2>
+
+    <details open>
+      <summary>Certificats relevés en CT (5)</summary>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Sujet CN</th><th>Autorité émettrice</th><th>Début</th><th>Fin</th><th>Wildcard</th></tr></thead>
+          <tbody>
+            <tr><td>www.cabinet-exemple.fr</td><td>Sectigo RSA Domain Validation Secure Server CA</td><td>2025-08-10</td><td>2026-08-06</td><td>—</td></tr>
+            <tr><td>cabinet-exemple.fr</td><td>R11 (Let's Encrypt)</td><td>2026-05-28</td><td>2026-08-26</td><td>—</td></tr>
+            <tr><td>*.cabinet-exemple.fr</td><td>R11 (Let's Encrypt)</td><td>2026-06-15</td><td>2026-09-13</td><td><span class="badge-wildcard">wildcard</span></td></tr>
+            <tr><td>cabinet-exemple.fr</td><td>DigiCert TLS RSA SHA256 2020 CA1</td><td>2025-08-10</td><td>2026-02-28</td><td>—</td></tr>
+            <tr><td>www.cabinet-exemple.fr</td><td>DigiCert TLS RSA SHA256 2020 CA1</td><td>2024-09-01</td><td>2025-09-01</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <details>
+      <summary>Configuration DNS</summary>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Type</th><th>Valeurs</th></tr></thead>
+          <tbody>
+            <tr><td>NS</td><td>ns1.exemple-registrar.fr., ns2.exemple-registrar.fr.</td></tr>
+            <tr><td>MX</td><td>10 mail.cabinet-exemple.fr.</td></tr>
+            <tr><td>CAA</td><td><span style="color:var(--critical)">aucun — toute AC peut émettre</span></td></tr>
+            <tr><td>TXT</td><td>"v=spf1 include:_spf.exemple-registrar.fr -all"</td></tr>
+            <tr><td>DNSKEY</td><td><span style="color:var(--muted)">absent — zone non signée</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <details>
+      <summary>Sous-domaines identifiés (3)</summary>
+      <p style="font-size:.87rem;margin:.8rem 0 0;color:var(--muted);">
+        <code>www.cabinet-exemple.fr</code> · <code>extranet.cabinet-exemple.fr</code> · <code>mail.cabinet-exemple.fr</code>
+      </p>
+    </details>
+  </section>
+
+</main>
+
+<footer>
+  <p>Rapport généré par <a href="https://trustline.identity-ops.com/">Trustline</a> · projet personnel, usage portfolio et pédagogique, sans exploitation commerciale.</p>
+  <p>Document sensible — ne pas diffuser sans le consentement du propriétaire du domaine. Toutes les données sont fictives.</p>
+  <p style="margin-top:.8rem;"><a href="https://trustline.identity-ops.com/">← Retour au site Trustline</a></p>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  var reduit = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Jauge SVG */
+  var gauge = document.querySelector(".gauge-remplie");
+  if (gauge) {
+    var cible = gauge.getAttribute("data-dashoffset-final");
+    if (reduit) { gauge.style.strokeDashoffset = cible; }
+    else { setTimeout(function () { gauge.style.strokeDashoffset = cible; }, 200); }
+  }
+
+  /* Reveal au scroll */
+  var elements = document.querySelectorAll(".reveal");
+  if (reduit || !("IntersectionObserver" in window)) {
+    elements.forEach(function (el) { el.classList.add("visible"); });
+  } else {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    elements.forEach(function (el) { obs.observe(el); });
+  }
+
+  /* Filtres constats */
+  var boutons = document.querySelectorAll(".filtre");
+  var constats = document.querySelectorAll(".constat");
+  boutons.forEach(function (bouton) {
+    bouton.addEventListener("click", function () {
+      var filtre = bouton.dataset.filtre;
+      boutons.forEach(function (b) { b.classList.remove("filtre--actif"); });
+      bouton.classList.add("filtre--actif");
+      constats.forEach(function (c) {
+        if (filtre === "tous" || c.dataset.gravite === filtre) {
+          c.style.display = "";
+        } else {
+          c.style.display = "none";
+        }
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
+
     --gris:#9A9488; --gris-sombre:#8E9AA8;
     --bg:var(--ivoire); --bg-alt:#EDE7DA; --ink:var(--charcoal); --muted:var(--gris);
     --accent:var(--laiton); --surface:#FFFFFF; --border:rgba(27,36,48,0.14);

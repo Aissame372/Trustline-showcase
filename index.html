@@ -145,7 +145,6 @@
   .barre__liens { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; }
   .barre__liens a { text-decoration: none; font-size: 0.78rem; letter-spacing: 0.06em; color: var(--muted); }
   .barre__liens a:hover { color: var(--accent); }
-  @media (max-width: 780px) { .barre__liens { display: none; } }
 
   /* -------- hero : toujours sombre, moment cinematique deliberer -------- */
   .hero {
@@ -155,6 +154,12 @@
     background: var(--charcoal);
     color: var(--ivoire);
     color-scheme: dark;
+  }
+  @media (max-width: 780px) {
+    .hero { padding: 3.5rem 0 3rem; }
+    .hero__marque { margin-bottom: 1.5rem; }
+    .hero h1 { font-size: clamp(1.7rem, 6vw, 2.5rem); }
+    .hero__sous { font-size: 0.95rem; }
   }
   .hero canvas { position: absolute; inset: -10% -5%; width: 110%; height: 120%; opacity: 0.55; will-change: transform; }
   /* grain filmique : texture discrete par-dessus le canvas, coherente dans les deux themes */
@@ -211,6 +216,7 @@
   }
 
   section { padding: 5.5rem 0; }
+  @media (max-width: 780px) { section { padding: 3.5rem 0; } }
   section.alt { background: var(--bg-alt); }
   .eyebrow { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin: 0 0 0.8rem; }
   h2 {
@@ -231,9 +237,10 @@
     background: var(--charcoal); color: #d9d4c8; border-radius: 4px; overflow: hidden;
     font-family: var(--font-mono); font-size: 0.82rem; margin-top: 1.6rem; border: 1px solid var(--border);
   }
+  @media (max-width: 640px) { .terminal { font-size: 0.72rem; } }
   .terminal__barre { display: flex; gap: 0.4rem; padding: 0.7rem 0.9rem; background: rgba(255,255,255,0.04); }
   .terminal__point { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.18); }
-  .terminal__corps { padding: 1.1rem 1.3rem 1.3rem; white-space: pre-wrap; line-height: 1.75; }
+  .terminal__corps { padding: 1.1rem 1.3rem 1.3rem; white-space: pre-wrap; line-height: 1.75; overflow-x: auto; }
   .terminal__corps .crit { color: #e08277; }
   .terminal__corps .moy { color: #e3ab53; }
   .terminal__corps .info { color: #8E9AA8; }
@@ -251,6 +258,7 @@
 
   /* -------- moment citation : pause editoriale, plein format sombre -------- */
   .moment-citation { background: var(--charcoal); color: var(--ivoire); color-scheme: dark; padding: 5.5rem 0; text-align: center; }
+  @media (max-width: 780px) { .moment-citation { padding: 3rem 0; } }
   .moment-citation blockquote {
     margin: 0 auto; max-width: 38rem; font-family: var(--font-display); font-style: italic; font-weight: 300;
     font-size: clamp(1.4rem, 3.4vw, 2.2rem); line-height: 1.45; text-wrap: balance; color: var(--ivoire);
@@ -473,20 +481,21 @@
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.8rem 3rem;
     padding: 2.2rem 0 0; border-top: 1px solid var(--border); margin-top: 1rem;
   }
-  @media (max-width: 780px) { .stats-grille { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 780px) { .stats-grille { grid-template-columns: repeat(2, 1fr); gap: 1.4rem 2rem; } }
   .stat-bloc { display: flex; flex-direction: column; gap: 0.25rem; }
   .stat-num {
     font-family: var(--font-display); font-size: 3rem; line-height: 1;
     color: var(--accent); font-weight: 400; font-variant-numeric: tabular-nums;
   }
+  @media (max-width: 480px) { .stat-num { font-size: 2.3rem; } }
   .stat-label { font-size: 0.72rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
 
   /* -------- grille de fonctionnalités -------- */
   .feature-grille {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 2.8rem;
   }
-  @media (max-width: 780px) { .feature-grille { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 480px) { .feature-grille { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .feature-grille { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .feature-grille { grid-template-columns: 1fr; } }
   .feature-card {
     background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
     padding: 1.6rem 1.5rem; display: flex; flex-direction: column; gap: 0.8rem;
