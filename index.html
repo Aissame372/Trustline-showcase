@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Trustline — la mémoire de vos certificats TLS</title>
 <meta name="description" content="Trustline reconstitue l'historique complet des certificats TLS d'un domaine et le traduit en un score de maturité clair — écrit et tenu par une seule personne, entre deux audits IAM." />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Trustline — la mémoire de vos certificats TLS" />
+<meta property="og:description" content="L'historique complet des certificats TLS d'un domaine, traduit en un score de maturité clair. Écrit et tenu par une seule personne, entre deux audits IAM." />
+<meta property="og:url" content="https://trustline.identity-ops.com/" />
+<meta property="og:locale" content="fr_FR" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Trustline — la mémoire de vos certificats TLS" />
+<meta name="twitter:description" content="L'historique complet des certificats TLS d'un domaine, traduit en un score de maturité clair." />
+<link rel="canonical" href="https://trustline.identity-ops.com/" />
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHBhdGggZD0iTTMgMTYgTDExIDE2IiBzdHJva2U9IiMxQjI0MzAiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTExIDE2IFExNiA1IDIxIDE2IiBzdHJva2U9IiNCMDhENTciIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+CiAgPHBhdGggZD0iTTIxIDE2IEwyOSAxNiIgc3Ryb2tlPSIjMUIyNDMwIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=" />
 <style>
   :root {
@@ -318,6 +327,20 @@
   .dash-apercu__note { font-size: 0.78rem; color: var(--gris-sombre); margin: 1.6rem 0 0; }
   .dash-apercu code { background: rgba(255,255,255,0.08); border-color: rgba(246,242,234,0.18); color: var(--ivoire); }
 
+  /* -------- l'offre : disponible aujourd'hui / a venir -------- */
+  .offre-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; margin-top: 2.2rem; }
+  @media (max-width: 700px) { .offre-grille { grid-template-columns: 1fr; } }
+  .offre-carte {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+    padding: 1.8rem; display: flex; flex-direction: column; gap: 0.7rem;
+  }
+  .offre-carte--a-venir { border-style: dashed; }
+  .offre-carte__label { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0; }
+  .offre-carte h3 { font-family: var(--font-display); font-weight: 500; font-size: 1.25rem; margin: 0; }
+  .offre-carte p.offre-carte__texte { font-size: 0.92rem; color: var(--muted); margin: 0; flex: 1; }
+  .offre-carte__lien { font-size: 0.82rem; text-decoration: none; color: var(--accent); border-bottom: 1px solid transparent; align-self: flex-start; }
+  .offre-carte__lien:hover { border-color: var(--accent); }
+
   /* -------- carte rapport exemple -------- */
   .carte-rapport { display: flex; gap: 2rem; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 2rem; margin-top: 2.2rem; }
   @media (max-width: 640px) { .carte-rapport { flex-direction: column; text-align: center; } }
@@ -414,6 +437,7 @@
     <li><a href="#score">Le score</a></li>
     <li><a href="#pourquoi">Face aux autres outils</a></li>
     <li><a href="#rapport">Le rapport</a></li>
+    <li><a href="#offre">L'offre</a></li>
     <li><a href="#apropos">Qui écrit ça</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -628,6 +652,30 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
   </div>
 </section>
 
+<section id="offre" class="reveal">
+  <div class="conteneur">
+    <p class="eyebrow">L'offre</p>
+    <h2>pas encore en vente — bientôt, proprement</h2>
+    <p class="mute">Deux façons d'utiliser Trustline, aujourd'hui et demain.</p>
+
+    <div class="offre-grille">
+      <article class="offre-carte">
+        <p class="offre-carte__label">Déjà disponible</p>
+        <h3>Le site, et un rapport à l'appui</h3>
+        <p class="offre-carte__texte">Ce site est public, code source inclus, avec un rapport d'exemple complet en PDF et en HTML. Le pipeline Python n'est pas encore public — écris-moi si tu veux le voir tourner sur un cas réel avant le lancement.</p>
+        <a class="offre-carte__lien" href="#rapport">Voir le rapport d'exemple →</a>
+      </article>
+      <article class="offre-carte offre-carte--a-venir">
+        <p class="offre-carte__label">À venir</p>
+        <h3>Une offre packagée</h3>
+        <p class="offre-carte__texte">Hébergement, suivi multi-domaines et alertes clé en main, pour les équipes qui préfèrent ne pas opérer l'outil elles-mêmes. Sous forme d'abonnement simple — les tarifs seront annoncés au lancement.</p>
+        <a class="offre-carte__lien" href="#nature-lancement">Être informé au lancement →</a>
+      </article>
+    </div>
+    <p class="mute" style="font-size:0.85rem; margin-top:1.8rem;">Je ne facture rien tant que le statut qui permet de le faire correctement n'est pas en place : pas de paiement en attente, pas de compte à créer aujourd'hui. Pour en discuter avant le lancement, écris-moi directement.</p>
+  </div>
+</section>
+
 <section id="valide" class="alt reveal">
   <div class="conteneur">
     <p class="eyebrow">Validé en conditions réelles</p>
@@ -684,6 +732,8 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
           <label for="nature-mission">Mission via une structure (portage, ESN, agence)</label>
           <input type="radio" name="nature" id="nature-technique" value="Question technique sur Trustline" />
           <label for="nature-technique">Question technique sur Trustline</label>
+          <input type="radio" name="nature" id="nature-lancement" value="Etre informe du lancement de l'offre packagee" />
+          <label for="nature-lancement">Être informé du lancement</label>
           <input type="radio" name="nature" id="nature-collab" value="Collaboration / contribution open source" />
           <label for="nature-collab">Collaboration / contribution open source</label>
           <input type="radio" name="nature" id="nature-autre" value="Autre" />
@@ -736,6 +786,7 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
       <li><a href="#pourquoi">Face aux autres outils</a></li>
       <li><a href="#multi-domaines">Dashboard</a></li>
       <li><a href="#rapport">Rapport d'exemple</a></li>
+      <li><a href="#offre">L'offre</a></li>
       <li><a href="https://github.com/Aissame372/Trustline-showcase">Dépôt du site</a></li>
     </ul>
   </div>
@@ -974,6 +1025,17 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
       });
     }
   }
+
+  // Lien "etre informe au lancement" (section Offre) : pre-coche l'option
+  // correspondante dans le formulaire plutot que de laisser chercher.
+  var precocherLancement = function () {
+    if (location.hash === "#nature-lancement") {
+      var radio = document.getElementById("nature-lancement");
+      if (radio) { radio.checked = true; }
+    }
+  };
+  window.addEventListener("hashchange", precocherLancement);
+  precocherLancement();
 
   // Contact : copier l'adresse email dans le presse-papiers
   var boutonCopier = document.getElementById("bouton-copier");

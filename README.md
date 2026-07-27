@@ -25,6 +25,19 @@ dans un dépôt privé distinct. Ce dépôt-ci est public.
   **entièrement fictif** (`cabinet-exemple.fr`). Aucune donnée réelle n'y
   figure. Les deux fichiers viennent du même rapport d'analyse : ne pas les
   régénérer séparément si l'un des deux change.
+- `robots.txt`, `sitemap.xml` — indexation basique (une seule page).
+
+## L'offre
+
+Section dédiée sur le site : ce qui est déjà public aujourd'hui (ce site,
+le rapport d'exemple), et une offre packagée (hébergement, suivi
+multi-domaines, alertes) annoncée comme "à venir", **sans prix ni tunnel de
+paiement** — volontairement, tant que le statut permettant de facturer
+légalement n'est pas en place (pas de SIRET actuellement). Le pipeline
+Python (dépôt `Trustline` principal) reste privé pour l'instant : la
+section ne prétend pas le contraire. Le lien "être informé au lancement"
+renvoie vers le formulaire de contact, avec l'option correspondante
+pré-cochée.
 
 ## Contact
 
