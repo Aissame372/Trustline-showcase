@@ -30,23 +30,26 @@
     majProgression();
   }
 
-  // Jauge de score : anime au premier passage en vue
+  // Jauge de score (donut circulaire) : anime le stroke-dashoffset au
+  // premier passage en vue, meme mecanisme que le rapport HTML (report.py).
   var jauge = document.getElementById("jauge");
   if (jauge) {
+    var dashoffsetCible = jauge.getAttribute("data-dashoffset-final");
+    var animerJauge = function () { jauge.style.strokeDashoffset = dashoffsetCible; };
     if (reduitMotion) {
-      jauge.classList.add("visible");
+      animerJauge();
     } else if ("IntersectionObserver" in window) {
       var obsJauge = new IntersectionObserver(function (entrees) {
         entrees.forEach(function (entree) {
           if (entree.isIntersecting) {
-            entree.target.classList.add("visible");
+            animerJauge();
             obsJauge.unobserve(entree.target);
           }
         });
       }, { threshold: 0.5 });
       obsJauge.observe(jauge);
     } else {
-      jauge.classList.add("visible");
+      animerJauge();
     }
   }
 
@@ -189,14 +192,22 @@
     var composerMessage = function () {
       var profilCoche = formulaireContact.querySelector('[name="profil"]:checked');
       var natureCochee = formulaireContact.querySelector('[name="nature"]:checked');
+      var perimetreCoche = formulaireContact.querySelector('[name="perimetre"]:checked');
+      var interetsCoches = formulaireContact.querySelectorAll('[name="interets"]:checked');
       var nom = formulaireContact.querySelector("#contact-nom").value.trim();
       var email = formulaireContact.querySelector("#contact-email").value.trim();
       var message = formulaireContact.querySelector("#contact-message").value.trim();
       var profil = profilCoche ? profilCoche.value : "(non précisé)";
       var nature = natureCochee ? natureCochee.value : "(non précisé)";
+      var perimetre = perimetreCoche ? perimetreCoche.value : "(non précisé)";
+      var interets = interetsCoches.length
+        ? Array.prototype.map.call(interetsCoches, function (i) { return i.value; }).join(", ")
+        : "(non précisé)";
 
       var corps = "Profil : " + profil + "\n" +
         "Nature du contact : " + nature + "\n" +
+        "Périmètre (domaines) : " + perimetre + "\n" +
+        "Intérêts : " + interets + "\n" +
         "Nom : " + nom + "\n" +
         "Email : " + email + "\n\n" +
         "Message :\n" + message;
