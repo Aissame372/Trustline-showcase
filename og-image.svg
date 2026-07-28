@@ -12,11 +12,11 @@
   <!-- Accent bar top -->
   <rect x="0" y="0" width="1200" height="3" fill="#B08D57"/>
 
-  <!-- Nouveau logo icone (3 chevrons) -->
-  <g transform="translate(80, 170)">
-    <path d="M0 90 L80 20 L160 90" stroke="#F5841F" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    <path d="M0 62 L80 -8 L160 62" stroke="#7B9AB5" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    <path d="M0 34 L80 -36 L160 34" stroke="#1B3559" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Logo officiel (3 polygones du kit de marque) -->
+  <g transform="translate(80, 130) scale(1.6)">
+    <polygon points="26,10 50,27 74,10 74,24 50,41 26,24" fill="#F5891F"/>
+    <polygon points="10,33 50,50 90,33 90,47 50,64 10,47" fill="#F6F2EA"/>
+    <polygon points="10,58 50,75 90,58 90,72 50,89 10,72" fill="#F6F2EA"/>
   </g>
 
   <!-- Product name -->

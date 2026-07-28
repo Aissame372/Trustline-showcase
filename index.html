@@ -16,7 +16,9 @@
 <meta name="twitter:description" content="Inventaire CT, vérification TLS en direct, score de maturité CLM — pipeline Python local." />
 <meta name="twitter:image" content="https://trustline.identity-ops.com/og-image.svg" />
 <link rel="canonical" href="https://trustline.identity-ops.com/" />
-<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHBhdGggZD0iTTMgMTYgTDExIDE2IiBzdHJva2U9IiMxQjI0MzAiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTExIDE2IFExNiA1IDIxIDE2IiBzdHJva2U9IiNCMDhENTciIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBmaWxsPSJub25lIi8+CiAgPHBhdGggZD0iTTIxIDE2IEwyOSAxNiIgc3Ryb2tlPSIjMUIyNDMwIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <style>
   :root {
     --ivoire: #F6F2EA;
@@ -669,10 +671,10 @@
 
 <nav class="barre">
   <a class="marque marque--nav" href="#haut">
-    <svg class="logo-new" viewBox="0 -4 44 36" fill="none" aria-hidden="true">
-      <path d="M6 28 L22 14 L38 28" stroke="#F5841F" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M6 19 L22 5 L38 19" stroke="#7B9AB5" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M6 10 L22 -4 L38 10" stroke="#1B3559" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <svg class="logo-new" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+      <polygon points="26,10 50,27 74,10 74,24 50,41 26,24" fill="#F5891F"/>
+      <polygon points="10,33 50,50 90,33 90,47 50,64 10,47" fill="#12303F"/>
+      <polygon points="10,58 50,75 90,58 90,72 50,89 10,72" fill="#12303F"/>
     </svg>
     <span class="marque__mot">Trustline</span>
   </a>
@@ -701,10 +703,10 @@
     <div class="hero__split">
       <div class="hero__texte">
         <div class="hero__marque">
-          <svg class="logo-new logo-new--hero" viewBox="0 -4 44 36" fill="none" aria-hidden="true">
-            <path d="M6 28 L22 14 L38 28" stroke="#F5841F" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M6 19 L22 5 L38 19" stroke="#7B9AB5" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M6 10 L22 -4 L38 10" stroke="#1B3559" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg class="logo-new logo-new--hero" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+            <polygon points="26,10 50,27 74,10 74,24 50,41 26,24" fill="#F5891F"/>
+            <polygon points="10,33 50,50 90,33 90,47 50,64 10,47" fill="#FFFFFF"/>
+            <polygon points="10,58 50,75 90,58 90,72 50,89 10,72" fill="#FFFFFF"/>
           </svg>
           <span style="font-family:var(--font-display);font-size:1.6rem;font-weight:300;color:var(--ivoire);letter-spacing:0.02em;">Trustline</span>
         </div>
@@ -926,12 +928,12 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
     <p class="mute">Chaque constat pèse sur le score selon sa gravité — un certificat expiré ne compte pas comme un certificat wildcard. Le score part de 100 et se lit en trois paliers.</p>
 
     <div class="gauge-wrapper">
-      <svg class="gauge-svg" viewBox="0 0 200 115"
+      <svg class="gauge-svg" viewBox="0 0 200 120"
            role="img" aria-label="Score de maturité CLM 61 sur 100, maturité moyenne, exemple illustratif">
         <path class="gauge-piste-arc" d="M 20 100 A 80 80 0 0 1 180 100"/>
         <path class="gauge-remplie-arc" id="jauge" d="M 20 100 A 80 80 0 0 1 180 100"/>
-        <text x="100" y="80" class="gauge-chiffre" text-anchor="middle">61</text>
-        <text x="100" y="98" class="gauge-niveau" text-anchor="middle">maturité moyenne — exemple</text>
+        <text x="100" y="72" class="gauge-chiffre" text-anchor="middle">61</text>
+        <text x="100" y="112" class="gauge-niveau" text-anchor="middle">maturité moyenne — exemple</text>
       </svg>
       <div class="gauge-legende">
         <span>0 · faible</span><span>50 · moyenne</span><span>80 · bonne</span>
@@ -1121,7 +1123,11 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
     <p class="eyebrow">À propos</p>
     <div class="bio">
       <div class="bio__glyphe" aria-hidden="true">
-        <svg class="glyphe" viewBox="0 0 64 32"><path class="brin" d="M2 16 L18 16"/><path class="suture" d="M18 16 Q26 3 34 16"/><path class="brin" d="M34 16 L60 16"/></svg>
+        <svg viewBox="0 0 100 100" style="width:2.4rem;height:2.4rem;">
+          <polygon points="26,10 50,27 74,10 74,24 50,41 26,24" fill="#F5891F"/>
+          <polygon points="10,33 50,50 90,33 90,47 50,64 10,47" fill="#12303F"/>
+          <polygon points="10,58 50,75 90,58 90,72 50,89 10,72" fill="#12303F"/>
+        </svg>
       </div>
       <div>
         <h2 style="margin-bottom:0.8rem;">un projet, une expertise</h2>
