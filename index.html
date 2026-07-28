@@ -133,6 +133,11 @@
   .marque--nav { font-size: 1.05rem; color: var(--ink); }
   .marque--nav .glyphe { width: 1.15rem; height: 0.58rem; }
 
+  /* -------- nouveau logo icône (3 chevrons) -------- */
+  .logo-new { display: block; overflow: visible; flex: none; align-self: center;
+    width: 2rem; height: 1.5rem; }
+  .logo-new--hero { width: 3.2rem; height: 2.4rem; }
+
   /* -------- navigation -------- */
   nav.barre {
     position: sticky; top: 0; z-index: 30;
@@ -177,8 +182,7 @@
     background: radial-gradient(ellipse at 32% 40%, transparent 0%, transparent 35%, rgba(27,36,48,0.55) 100%);
   }
   .hero__contenu { position: relative; z-index: 1; }
-  .hero__marque { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 3rem; }
-  .hero__marque .glyphe--hero { width: 5.5rem; height: 2.75rem; }
+  .hero__marque { display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem; }
   .hero__oeil {
     font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em;
     color: var(--laiton-clair); margin: 0 0 1.2rem;
@@ -532,10 +536,16 @@
   }
   .pipeline__etape p { font-size: 0.84rem; color: var(--muted); text-align: center; margin: 0; padding: 0 0.5rem; }
   @media (max-width: 600px) {
-    .pipeline { flex-direction: column; gap: 1.4rem; }
+    .pipeline { flex-direction: column; gap: 0.8rem; }
     .pipeline::before { display: none; }
-    .pipeline__etape { flex-direction: row; align-items: flex-start; gap: 1rem; }
-    .pipeline__etape h3, .pipeline__etape p { text-align: left; }
+    .pipeline__etape {
+      flex-direction: row; align-items: center; gap: 1rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; padding: 1rem 1.2rem;
+    }
+    .pipeline__num { flex-shrink: 0; width: 2.8rem; height: 2.8rem; font-size: 1.05rem; }
+    .pipeline__etape h3 { text-align: left; font-size: 0.88rem; }
+    .pipeline__etape p { text-align: left; font-size: 0.84rem; padding: 0; }
   }
 
   /* -------- section sécurité -------- */
@@ -659,12 +669,12 @@
 
 <nav class="barre">
   <a class="marque marque--nav" href="#haut">
-    <svg class="glyphe" viewBox="0 0 64 32" aria-hidden="true">
-      <path class="brin" d="M2 16 L18 16"/>
-      <path class="suture" d="M18 16 Q26 3 34 16"/>
-      <path class="brin" d="M34 16 L60 16"/>
+    <svg class="logo-new" viewBox="0 -4 44 36" fill="none" aria-hidden="true">
+      <path d="M6 28 L22 14 L38 28" stroke="#F5841F" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M6 19 L22 5 L38 19" stroke="#7B9AB5" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M6 10 L22 -4 L38 10" stroke="#1B3559" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <span class="marque__mot">trustline</span>
+    <span class="marque__mot">Trustline</span>
   </a>
   <ul class="barre__liens" id="nav-liens">
     <li><a href="#fonctionnement">La méthode</a></li>
@@ -691,11 +701,12 @@
     <div class="hero__split">
       <div class="hero__texte">
         <div class="hero__marque">
-          <svg class="glyphe glyphe--hero anime" viewBox="0 0 64 32" aria-hidden="true">
-            <path class="brin" d="M2 16 L18 16"/>
-            <path class="suture" d="M18 16 Q26 3 34 16"/>
-            <path class="brin" d="M34 16 L60 16"/>
+          <svg class="logo-new logo-new--hero" viewBox="0 -4 44 36" fill="none" aria-hidden="true">
+            <path d="M6 28 L22 14 L38 28" stroke="#F5841F" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 19 L22 5 L38 19" stroke="#7B9AB5" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 10 L22 -4 L38 10" stroke="#1B3559" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
+          <span style="font-family:var(--font-display);font-size:1.6rem;font-weight:300;color:var(--ivoire);letter-spacing:0.02em;">Trustline</span>
         </div>
         <p class="hero__oeil">Certificate Lifecycle Management — inventaire, score, alertes</p>
         <h1>Vos certificats TLS ont une histoire.<br />Trustline la reconstitue.</h1>

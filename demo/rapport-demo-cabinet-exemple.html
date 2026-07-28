@@ -136,21 +136,20 @@
   footer a{color:var(--accent);text-decoration:none;}
   footer a:hover{text-decoration:underline;}
 
-  /* reveal animation */
-  @media(prefers-reduced-motion:no-preference){
-    .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;}
-    .reveal.visible{opacity:1;transform:none;}
-  }
+  /* reveal animation - tout visible par defaut, pas besoin de scroll sur un rapport */
+  .reveal { opacity: 1; transform: none; }
 </style>
 </head>
 <body>
 
 <nav class="barre">
   <a class="marque" href="https://trustline.identity-ops.com/">
-    <svg class="glyphe" viewBox="0 0 64 32" aria-hidden="true">
-      <path class="brin" d="M2 16 L18 16"/><path class="suture" d="M18 16 Q26 3 34 16"/><path class="brin" d="M34 16 L60 16"/>
+    <svg style="display:block;overflow:visible;width:1.6rem;height:1.2rem;flex:none;" viewBox="0 -4 44 36" fill="none" aria-hidden="true">
+      <path d="M6 28 L22 14 L38 28" stroke="#F5841F" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M6 19 L22 5 L38 19" stroke="#7B9AB5" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M6 10 L22 -4 L38 10" stroke="#1B3559" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    trustline
+    Trustline
   </a>
   <div class="barre-droite">
     <span class="barre-domaine">cabinet-exemple.fr</span>
@@ -428,18 +427,9 @@
     else { setTimeout(function () { gauge.style.strokeDashoffset = cible; }, 200); }
   }
 
-  /* Reveal au scroll */
+  /* Reveal au scroll - inutile sur un rapport, tout est deja visible */
   var elements = document.querySelectorAll(".reveal");
-  if (reduit || !("IntersectionObserver" in window)) {
-    elements.forEach(function (el) { el.classList.add("visible"); });
-  } else {
-    var obs = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); }
-      });
-    }, { threshold: 0.1 });
-    elements.forEach(function (el) { obs.observe(el); });
-  }
+  elements.forEach(function (el) { el.classList.add("visible"); });
 
   /* Filtres constats */
   var boutons = document.querySelectorAll(".filtre");
