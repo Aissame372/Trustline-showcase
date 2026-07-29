@@ -270,10 +270,12 @@
   .terminal {
     background: var(--charcoal); color: #d9d4c8; border-radius: 4px; overflow: hidden;
     font-family: var(--font-mono); font-size: 0.82rem; margin-top: 1.6rem; border: 1px solid var(--border);
+    border-top: 2px solid var(--laiton-clair);
   }
   @media (max-width: 640px) { .terminal { font-size: 0.72rem; } }
-  .terminal__barre { display: flex; gap: 0.4rem; padding: 0.7rem 0.9rem; background: rgba(255,255,255,0.04); }
+  .terminal__barre { display: flex; align-items: center; gap: 0.4rem; padding: 0.7rem 0.9rem; background: rgba(255,255,255,0.04); }
   .terminal__point { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.18); }
+  .terminal__label { margin-left: auto; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--laiton-clair); }
   .terminal__corps { padding: 1.1rem 1.3rem 1.3rem; white-space: pre-wrap; line-height: 1.75; overflow-x: auto; }
   .terminal__corps .crit { color: #e08277; }
   .terminal__corps .moy { color: #e3ab53; }
@@ -540,6 +542,8 @@
     box-shadow: 0 10px 26px rgba(27,36,48,0.10);
   }
   .feature-icone { width: 36px; height: 36px; color: var(--accent); flex: none; }
+  .feature-tete { display: flex; align-items: center; justify-content: space-between; }
+  .feature-num { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; }
   .feature-card h3 {
     font-family: var(--font-sans); font-size: 0.86rem; letter-spacing: 0.05em;
     text-transform: uppercase; font-weight: 500; margin: 0;
@@ -823,7 +827,7 @@
     <p>Le résultat n'est pas une liste de dates d'expiration. C'est un inventaire complet avec les écarts entre ce qui a été émis et ce qui est en ligne, et un score qui traduit la situation en un seul chiffre.</p>
 
     <div class="terminal">
-      <div class="terminal__barre"><span class="terminal__point"></span><span class="terminal__point"></span><span class="terminal__point"></span></div>
+      <div class="terminal__barre"><span class="terminal__point"></span><span class="terminal__point"></span><span class="terminal__point"></span><span class="terminal__label">Transcript certifié</span></div>
       <div class="terminal__corps">$ trustline analyze cabinet-exemple.fr
 
 score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
@@ -862,44 +866,62 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
 
     <div class="feature-grille">
       <article class="feature-card reveal-item" style="--d:0s">
-        <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-        </svg>
+        <div class="feature-tete">
+          <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <span class="feature-num">Pièce 01</span>
+        </div>
         <h3>Inventaire CT passif</h3>
         <p>Tous les certificats émis depuis les journaux Certificate Transparency + DNS public. Aucune connexion vers la cible.</p>
       </article>
       <article class="feature-card reveal-item" style="--d:0.08s">
-        <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/>
-        </svg>
+        <div class="feature-tete">
+          <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/>
+          </svg>
+          <span class="feature-num">Pièce 02</span>
+        </div>
         <h3>Sondage TLS actif</h3>
         <p>Handshake TLS réel sur les ports de services chiffrés. Distingue ce qui est servi de ce qui valide une chaîne stricte.</p>
       </article>
       <article class="feature-card reveal-item" style="--d:0.16s">
-        <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 0 1 1.06 0Z"/>
-        </svg>
+        <div class="feature-tete">
+          <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 0 1 1.06 0Z"/>
+          </svg>
+          <span class="feature-num">Pièce 03</span>
+        </div>
         <h3>Réseau local</h3>
         <p>Découverte ARP et mDNS sur le LAN (NAS, routeurs, IoT). Mêmes garde-fous qu'en externe, sans scan de ports large.</p>
       </article>
       <article class="feature-card reveal-item" style="--d:0.24s">
-        <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/>
-        </svg>
+        <div class="feature-tete">
+          <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/>
+          </svg>
+          <span class="feature-num">Pièce 04</span>
+        </div>
         <h3>Score de maturité CLM</h3>
         <p>16 familles de constats pondérés par gravité. Un seul chiffre sur 100, utilisable en CI/CD avec <code>--fail-under</code>.</p>
       </article>
       <article class="feature-card reveal-item" style="--d:0.32s">
-        <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
-        </svg>
+        <div class="feature-tete">
+          <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
+          </svg>
+          <span class="feature-num">Pièce 05</span>
+        </div>
         <h3>Rapport PDF + HTML</h3>
         <p>Résumé exécutif, KPI, jauge, chronologie filtrables. PDF chiffrable AES-256, HTML entièrement autonome (aucun appel réseau).</p>
       </article>
       <article class="feature-card reveal-item" style="--d:0.4s">
-        <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/>
-        </svg>
+        <div class="feature-tete">
+          <svg class="feature-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/>
+          </svg>
+          <span class="feature-num">Pièce 06</span>
+        </div>
         <h3>Alertes &amp; tendance</h3>
         <p>Alertes email/webhook sur les expirations, historique du score, diff entre deux analyses pour voir ce qui a changé depuis le dernier rapport.</p>
       </article>
