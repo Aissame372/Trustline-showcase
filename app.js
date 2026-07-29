@@ -259,8 +259,8 @@
   if (boutonCopier) {
     boutonCopier.addEventListener("click", function () {
       var adresse = boutonCopier.dataset.adresse;
-      var suite = function () { statutContact.textContent = "Adresse copiée dans le presse-papiers."; };
-      var echec = function () { statutContact.textContent = "Copie indisponible — utilisez le lien mailto ci-contre."; };
+      var suite = function () { if (statutContact) statutContact.textContent = "Adresse copiée dans le presse-papiers."; };
+      var echec = function () { if (statutContact) statutContact.textContent = "Copie indisponible — utilisez le lien mailto ci-contre."; };
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(adresse).then(suite).catch(echec);
       } else {
@@ -332,7 +332,10 @@
         obsStats.unobserve(entry.target);
         var el = entry.target;
         var cible = parseInt(el.dataset.target, 10);
-        if (isNaN(cible) || reduitMotion) { el.textContent = cible; return; }
+        // Sans data-target exploitable on laisse le contenu du HTML en place :
+        // ecrire "NaN" dans la page serait pire que ne rien animer.
+        if (isNaN(cible)) { return; }
+        if (reduitMotion) { el.textContent = cible; return; }
         var debut = performance.now();
         var duree = 1300;
         (function animer(maintenant) {

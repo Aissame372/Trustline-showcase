@@ -11,3 +11,10 @@ node_modules
 node_modules/**
 .DS_Store
 wrangler.jsonc
+
+# Notes de developpement : rien n'y renvoie depuis le site, et elles citent
+# des chemins du depot prive (docs/, CLAUDE.md). Pas de raison de les servir
+# sur trustline.identity-ops.com. (Le depot GitHub reste public : les
+# exclure ici ne fait que reduire la surface, ca ne les rend pas privees.)
+README.md
+fonts/README.md
