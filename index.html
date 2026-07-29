@@ -407,6 +407,11 @@
     padding: 14px 10px; background-clip: content-box, padding-box; position: relative;
   }
   .carte-rapport__vignette::before { content: ""; position: absolute; top: 14px; left: 10px; right: 10px; height: 3px; background: var(--accent); }
+  .carte-rapport__vignette::after {
+    content: "✓"; position: absolute; bottom: 10px; right: 8px; width: 22px; height: 22px; border-radius: 50%;
+    border: 1px solid var(--laiton-clair); color: var(--laiton-clair); font-size: 0.7rem;
+    display: flex; align-items: center; justify-content: center; background: var(--bg-alt);
+  }
   .carte-rapport__texte { flex: 1; }
   .carte-rapport__texte p { margin: 0.4rem 0 1.2rem; color: var(--muted); font-size: 0.92rem; }
   .carte-rapport__actions { display: flex; gap: 0.9rem; flex-wrap: wrap; }
