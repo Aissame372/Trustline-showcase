@@ -9,6 +9,21 @@
   Cross-Origin-Resource-Policy: same-origin
   Cache-Control: public, max-age=0, must-revalidate
 
+# Le rapport de demo est un artefact autonome genere par report.py : son
+# <script> est inline par construction (le fichier doit rester lisible hors
+# ligne, sans fichier .js a cote). Sous la CSP globale (script-src 'self')
+# il etait purement et simplement bloque : jauge figee a vide et boutons de
+# filtre par gravite inertes. On l'autorise par empreinte, pas via
+# 'unsafe-inline'. Pas de formulaire sur cette page -> form-action 'none'.
+#
+# ATTENTION : regenerer le rapport invalide l'empreinte. La recalculer avec
+#   python3 -c "import base64,hashlib,re,sys; \
+#     s=re.search(r'<script>(.*?)</script>', open(sys.argv[1]).read(), re.S)[1]; \
+#     print('sha256-'+base64.b64encode(hashlib.sha256(s.encode()).digest()).decode())" \
+#     demo/rapport-demo-cabinet-exemple.html
+/demo/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'sha256-3M88qbLQNgeOix3Zz3q5lr0skgfRCceTHi3YwSKlVHY='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; form-action 'none'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'
+
 /og-image.svg
   Cross-Origin-Resource-Policy: cross-origin
   Cache-Control: public, max-age=86400

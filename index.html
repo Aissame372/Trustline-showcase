@@ -300,6 +300,13 @@
   .moment-citation blockquote::before, .moment-citation blockquote::after { content: '"'; color: var(--laiton-clair); }
   .moment-citation figcaption { margin-top: 1.6rem; font-family: var(--font-sans); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--gris-sombre); }
 
+  /* -------- sceau : marque le passage a un moment de dossier certifie -------- */
+  .sceau {
+    width: 2.4rem; height: 2.4rem; margin: 0 auto 1.6rem; border-radius: 50%;
+    border: 1px solid var(--laiton-clair); display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: 1.1rem; color: var(--laiton-clair);
+  }
+
   /* -------- jauge score : donut circulaire (même grammaire visuelle
      que le rapport HTML généré par report.py) -------- */
   .jauge-demo { display: flex; align-items: center; gap: 2.4rem; flex-wrap: wrap; margin-top: 2.5rem; }
@@ -745,7 +752,7 @@
           </svg>
           <span style="font-family:var(--font-display);font-size:1.6rem;font-weight:300;color:var(--ivoire);letter-spacing:0.02em;">Trustline</span>
         </div>
-        <p class="hero__oeil">Certificate Lifecycle Management · inventaire, score, alertes</p>
+        <p class="hero__oeil">Certificate Lifecycle Management · Pièce N°1 du dossier</p>
         <h1>Vos certificats TLS ont une histoire.<br />Trustline la reconstitue.</h1>
         <p class="hero__sous">Inventaire complet des certificats TLS depuis les journaux Certificate Transparency, vérification en direct de ce qui est réellement servi, score de maturité CLM exportable. Exécution locale, aucune donnée transmise.</p>
         <div class="hero__actions">
@@ -920,7 +927,8 @@ score de maturité clm : 10/100 — <span class="crit">maturité faible</span>
 
 <section class="moment-citation reveal" aria-label="Une observation de terrain">
   <div class="conteneur">
-    <figure style="margin:0;">
+    <figure style="margin:0; text-align:center;">
+      <span class="sceau" aria-hidden="true">”</span>
       <blockquote>Le certificat qui expire un dimanche à 3h du matin n'est jamais une surprise. C'est toujours celui que personne ne surveillait.</blockquote>
       <figcaption>Constat terrain, pas un effet de style.</figcaption>
     </figure>
