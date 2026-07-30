@@ -15,13 +15,12 @@ des certificats TLS reste presque toujours implicite et éclatée dans les
 organisations, jusqu'au jour où l'un d'eux expire un dimanche. Le projet est
 porté par un expert en gestion des identités et des accès (IAM), spécialisé
 PKI et cycle de vie des certificats (comparatifs de solutions IAM/CLM en
-environnement réel), également enseignant de modules d'informatique dans le
-supérieur.
+environnement réel).
 
 Objectifs, dans l'ordre :
 1. Un portfolio technique crédible, à destination de recruteurs et de
    décideurs IT/sécurité.
-2. Un support pédagogique réutilisable pour des cours PKI/OIDC/mTLS.
+2. Un support de formation (PKI, OIDC, mTLS), réutilisable dans un cadre professionnel.
 3. Une future offre d'audit — différée : le statut permettant de facturer
    légalement n'est pas encore en place (voir section "L'offre" ci-dessous).
 
