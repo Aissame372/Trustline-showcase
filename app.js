@@ -50,15 +50,23 @@
   });
 
   // ── Video de fond du hero : pause si reduced-motion, repli silencieux
-  // sur le canvas existant si le fichier ne charge pas. ──
+  // sur le canvas existant si le fichier ne charge pas. Chargement differe
+  // (pas d'attribut autoplay) : la requete video ne part qu'apres le
+  // chargement complet de la page + un temps mort navigateur, pour ne
+  // jamais concurrencer les ressources critiques (polices, CSS, LCP). ──
   var heroVideo = document.getElementById("hero-video");
   if (heroVideo) {
     if (reduitMotion) {
-      heroVideo.pause();
-      heroVideo.removeAttribute("autoplay");
       heroVideo.style.display = "none";
     } else {
       heroVideo.addEventListener("error", function () { heroVideo.style.display = "none"; }, true);
+      var demarrerVideo = function () { heroVideo.play().catch(function () {}); };
+      var attendreInactivite = window.requestIdleCallback || function (cb) { setTimeout(cb, 200); };
+      if (document.readyState === "complete") {
+        attendreInactivite(demarrerVideo);
+      } else {
+        window.addEventListener("load", function () { attendreInactivite(demarrerVideo); });
+      }
     }
   }
 

@@ -8,6 +8,7 @@
 <link rel="canonical" href="https://trustline.identity-ops.com/confidentialite.html" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="icon" href="/favicon.ico" sizes="any" />
+<script src="/theme.js"></script>
 <style>
   :root {
     --ivoire: #F6F2EA; --charcoal: #1B2430; --laiton: #B08D57; --laiton-clair: #C9A671;
@@ -55,6 +56,18 @@
   th { color: var(--muted); font-weight: 500; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
   footer { border-top: 1px solid var(--border); padding: 2rem 0 3rem; font-size: 0.82rem; color: var(--muted); }
   footer a { color: var(--muted); }
+  .theme-toggle {
+    display: flex; align-items: center; justify-content: center; flex: none;
+    width: 2rem; height: 2rem; border-radius: 50%; border: 1px solid var(--border);
+    background: transparent; color: var(--ink); cursor: pointer; margin-left: 1rem;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+  .theme-toggle svg { width: 0.95rem; height: 0.95rem; }
+  .theme-toggle__lune { display: none; }
+  :root[data-theme="light"] .theme-toggle__soleil { display: none; }
+  :root[data-theme="light"] .theme-toggle__lune { display: block; }
+  .barre-droite { display: flex; align-items: center; }
 </style>
 </head>
 <body>
@@ -62,7 +75,17 @@
 <nav class="barre">
   <div class="conteneur">
     <a class="marque" href="/">Trustline</a>
-    <a class="retour" href="/">← Retour au site</a>
+    <div class="barre-droite">
+      <a class="retour" href="/">← Retour au site</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Changer de thème">
+        <svg class="theme-toggle__soleil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
+        <svg class="theme-toggle__lune" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
   </div>
 </nav>
 

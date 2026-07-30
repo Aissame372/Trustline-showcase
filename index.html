@@ -805,8 +805,8 @@
 </nav>
 
 <header class="hero" id="haut">
-  <video class="hero__video" id="hero-video" autoplay muted loop playsinline preload="none" aria-hidden="true">
-    <source src="video/hero-fond.mp4" type="video/mp4" media="(min-width: 780px)">
+  <video class="hero__video" id="hero-video" muted loop playsinline preload="none" aria-hidden="true">
+    <source src="video/hero-fond.mp4" type="video/mp4" media="(min-width: 780px)" fetchpriority="low">
   </video>
   <canvas id="reseau" aria-hidden="true"></canvas>
   <div class="conteneur hero__contenu">

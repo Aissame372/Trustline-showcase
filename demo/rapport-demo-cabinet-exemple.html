@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Trustline — Rapport cabinet-exemple.fr · Score 10/100</title>
 <meta name="description" content="Rapport d'analyse Trustline pour cabinet-exemple.fr : 3 constats critiques, score de maturité CLM 10/100." />
+<script src="/theme.js"></script>
 <style>
   :root {
     --ivoire:#F6F2EA; --charcoal:#1B2430; --laiton:#B08D57; --laiton-clair:#C9A671;
@@ -41,6 +42,12 @@
   .barre-domaine{font-size:0.78rem;color:var(--muted);font-family:var(--font-mono);}
   .lien-retour{font-size:0.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:2px;padding:.35rem .8rem;transition:border-color .2s,color .2s;}
   .lien-retour:hover{border-color:var(--accent);color:var(--accent);}
+  .theme-toggle{display:flex;align-items:center;justify-content:center;flex:none;width:2rem;height:2rem;border-radius:50%;border:1px solid var(--border);background:transparent;color:var(--ink);cursor:pointer;transition:border-color .2s,color .2s;}
+  .theme-toggle:hover{border-color:var(--accent);color:var(--accent);}
+  .theme-toggle svg{width:0.95rem;height:0.95rem;}
+  .theme-toggle__lune{display:none;}
+  :root[data-theme="light"] .theme-toggle__soleil{display:none;}
+  :root[data-theme="light"] .theme-toggle__lune{display:block;}
 
   /* hero (dark) */
   header.hero{background:var(--charcoal);color:var(--ivoire);color-scheme:dark;padding:3.5rem 1.5rem 3rem;display:flex;gap:2.5rem;align-items:center;flex-wrap:wrap;}
@@ -154,6 +161,14 @@
   <div class="barre-droite">
     <span class="barre-domaine">cabinet-exemple.fr</span>
     <a class="lien-retour" href="https://trustline.identity-ops.com/">← Site</a>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Changer de thème">
+      <svg class="theme-toggle__soleil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+      </svg>
+      <svg class="theme-toggle__lune" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
   </div>
 </nav>
 
