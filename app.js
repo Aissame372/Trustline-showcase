@@ -18,6 +18,50 @@
     elements.forEach(function (el) { observateur.observe(el); });
   }
 
+  // ── Rideau d'ouverture + titre cinetique (H1 du hero, <br> preserve) ────
+  var titre = document.getElementById("hero-titre");
+  if (titre) {
+    var segments = titre.innerHTML.split(/<br\s*\/?>/i);
+    titre.innerHTML = "";
+    var indexMot = 0;
+    segments.forEach(function (segment, indexSegment) {
+      if (indexSegment > 0) { titre.appendChild(document.createElement("br")); }
+      var temporaire = document.createElement("div");
+      temporaire.innerHTML = segment;
+      temporaire.textContent.split(" ").forEach(function (mot) {
+        if (!mot) { return; }
+        var span = document.createElement("span");
+        span.className = "mot";
+        span.textContent = mot;
+        span.style.transitionDelay = (0.35 + indexMot * 0.09) + "s";
+        titre.appendChild(span);
+        titre.appendChild(document.createTextNode(" "));
+        indexMot++;
+      });
+    });
+  }
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      document.documentElement.classList.add("rideau-ouvre");
+      if (titre) {
+        titre.querySelectorAll(".mot").forEach(function (span) { span.classList.add("visible"); });
+      }
+    });
+  });
+
+  // ── Video de fond du hero : pause si reduced-motion, repli silencieux
+  // sur le canvas existant si le fichier ne charge pas. ──
+  var heroVideo = document.getElementById("hero-video");
+  if (heroVideo) {
+    if (reduitMotion) {
+      heroVideo.pause();
+      heroVideo.removeAttribute("autoplay");
+      heroVideo.style.display = "none";
+    } else {
+      heroVideo.addEventListener("error", function () { heroVideo.style.display = "none"; }, true);
+    }
+  }
+
   // Barre de progression de lecture (fil qui se remplit avec le scroll)
   var filLecture = document.getElementById("fil-lecture");
   if (filLecture) {
@@ -392,6 +436,19 @@
       });
     }, { threshold: 0.2 });
     obsTerminal.observe(termCorps);
+  }
+
+  // ── Bouton retour en haut ────────────────────────────────────────────────
+  var boutonHaut = document.getElementById("bouton-haut");
+  if (boutonHaut) {
+    document.addEventListener("scroll", function () {
+      requestAnimationFrame(function () {
+        boutonHaut.classList.toggle("visible", window.scrollY > window.innerHeight * 0.6);
+      });
+    }, { passive: true });
+    boutonHaut.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: reduitMotion ? "auto" : "smooth" });
+    });
   }
 
   // ── Scroll spy navigation ──────────────────────────────────────────
