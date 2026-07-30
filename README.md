@@ -8,6 +8,29 @@ Ce dépôt contient uniquement le **site de présentation** et un **rapport
 d'exemple entièrement fictif** — pas le code source du pipeline, qui reste
 dans un dépôt privé distinct. Ce dépôt-ci est public.
 
+## Contexte
+
+Trustline est né d'une observation de terrain : la gestion du cycle de vie
+des certificats TLS reste presque toujours implicite et éclatée dans les
+organisations, jusqu'au jour où l'un d'eux expire un dimanche. Le projet est
+porté par un expert en gestion des identités et des accès (IAM), spécialisé
+PKI et cycle de vie des certificats (comparatifs de solutions IAM/CLM en
+environnement réel), également enseignant de modules d'informatique dans le
+supérieur.
+
+Objectifs, dans l'ordre :
+1. Un portfolio technique crédible, à destination de recruteurs et de
+   décideurs IT/sécurité.
+2. Un support pédagogique réutilisable pour des cours PKI/OIDC/mTLS.
+3. Une future offre d'audit — différée : le statut permettant de facturer
+   légalement n'est pas encore en place (voir section "L'offre" ci-dessous).
+
+Ce dépôt est la vitrine de ce travail, pensée pour amorcer un échange autour
+d'un poste salarié ou d'une mission (portage, ESN, agence) — voir "Contact".
+Il ne publie ni le code du pipeline ni de détail d'implémentation permettant
+de le reconstituer : uniquement une démonstration figée (rapport d'exemple
+sur un domaine fictif) et le site qui en présente les principes.
+
 ## Contenu
 
 - `index.html` — le site, entièrement autonome et statique : aucune
